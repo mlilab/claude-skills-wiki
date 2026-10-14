@@ -1,0 +1,8 @@
+{
+  "rel_tol": 0.0,
+  "line_window": 3,
+  "min_grounding_ratio": 0.9,
+  "bib": "refs.bib",
+  "refs_cache": "refs_cache.json",
+  "final_result_sources": ["scores.json#final"]
+}

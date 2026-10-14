@@ -1,0 +1,5 @@
+{
+  "no_local_search": {"run": "002", "score": 0.9818},
+  "local_search_5000": {"run": "004", "score": 0.9818},
+  "exploratory_easy_subset": {"run": "x07", "score": 0.9952, "note": "10 easiest instances only, not the submitted setting"}
+}

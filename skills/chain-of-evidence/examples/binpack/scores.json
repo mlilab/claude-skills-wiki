@@ -1,0 +1,4 @@
+{
+  "final": {"run": "003", "score": 0.9818, "latency_ms": 14.4},
+  "baseline_next_fit": {"run": "001", "score": 0.8248, "latency_ms": 3.1}
+}
