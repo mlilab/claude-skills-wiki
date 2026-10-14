@@ -1,0 +1,5 @@
+requests>=2.25
+pyyaml>=5.4
+beautifulsoup4>=4.9
+markdown>=3.3
+pymupdf>=1.23  # optional: PDF page numbers, figures of PDF-only papers

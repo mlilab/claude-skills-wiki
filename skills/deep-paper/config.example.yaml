@@ -1,0 +1,41 @@
+# deep-paper settings: ~/.config/deep-paper/config.yaml (or the file in $DEEP_PAPER_CONFIG)
+
+language: en            # write-up language: en | ko (Korean sentences, English technical terms)
+backend: html           # html | notion | both
+data_dir: ~/deep-papers # working files per paper, and the static site for the html backend
+
+html:
+  title: Deep Papers    # site title on the index page
+  # home_link: {href: "../index.html", label: "Daily Papers"}   # optional link to a parent site
+
+notion:
+  data_source_id: null  # the database (data source) that receives one row per paper
+  token_file: null      # optional integration token file (mode 600), only to upload local figures
+
+taxonomy:
+  categories:           # options for the Category field (Notion: the column's options)
+    - LLM
+    - Reasoning
+    - Agents
+    - Vision-Language
+    - Computer Vision
+    - Generative Models
+    - Video
+    - 3D
+    - Robotics
+    - Reinforcement Learning
+    - Efficient ML
+    - Theory
+    - Benchmark
+    - Survey
+  allow_new_options: true   # false: only the categories above / existing Notion options
+
+figures:
+  min_main: 6           # main-body figures to feature (all if the paper has fewer)
+  max_main: 8
+
+venues: auto            # or a list such as ["ICLR 2026", "ICML 2026", "CVPR 2026"]
+
+check:
+  max_prose_ratio: 0.30 # plain prose share of the write-up
+  min_compression: 0.12 # write-up length / original length per section before a warning
