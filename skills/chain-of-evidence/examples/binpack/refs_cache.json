@@ -1,0 +1,58 @@
+{
+  "johnson1974fast": {
+    "key": "johnson1974fast",
+    "status": "verified",
+    "title": "Fast algorithms for bin packing",
+    "source": "https://www.datalearner.com/academic/journal-papers/0022-0000/volumes-and-issues/39/paper-detail/114372",
+    "doi": "10.1016/S0022-0000(74)80026-7",
+    "arxiv": "",
+    "year": "1974",
+    "authors": "",
+    "abstract": "Analyzes fast approximation algorithms for one-dimensional bin packing, including first-fit and first-fit decreasing, with worst-case performance bounds.",
+    "method": "manual-web-lookup",
+    "checked_at": "2026-10-14T05:24:38+00:00",
+    "title_similarity": 1.0
+  },
+  "vaswani2017attention": {
+    "key": "vaswani2017attention",
+    "status": "verified",
+    "title": "Attention Is All You Need",
+    "source": "https://arxiv.org/abs/1706.03762",
+    "doi": "",
+    "arxiv": "1706.03762",
+    "year": "",
+    "authors": "",
+    "abstract": "Dominant sequence transduction models rely on complex recurrent or convolutional encoder-decoder networks; the best ones also connect encoder and decoder via attention. Proposes the Transformer, based solely on attention.",
+    "method": "manual-web-lookup",
+    "checked_at": "2026-10-14T05:24:38+00:00",
+    "title_similarity": 1.0
+  },
+  "smith2023neural": {
+    "key": "smith2023neural",
+    "status": "not_found",
+    "title": "Neural First-Fit: Learned Bin Packing at Scale",
+    "source": "web search: no matching publication",
+    "doi": "",
+    "arxiv": "",
+    "year": "",
+    "authors": "",
+    "abstract": "",
+    "method": "manual-web-lookup",
+    "checked_at": "2026-10-14T05:24:38+00:00",
+    "title_similarity": 1.0
+  },
+  "coffman1984dynamic": {
+    "key": "coffman1984dynamic",
+    "status": "verified",
+    "title": "Fast algorithms for bin packing",
+    "source": "https://doi.org/10.1016/S0022-0000(74)80026-7 (DOI resolves to Johnson 1974)",
+    "doi": "10.1016/S0022-0000(74)80026-7",
+    "arxiv": "",
+    "year": "",
+    "authors": "",
+    "abstract": "",
+    "method": "manual-web-lookup",
+    "checked_at": "2026-10-14T05:24:38+00:00",
+    "title_similarity": 0.378
+  }
+}

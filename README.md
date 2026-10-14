@@ -5,6 +5,7 @@
 | 스킬 | 설명 | 원본 |
 | --- | --- | --- |
 | [Daily Papers](skills/daily-papers/README.md) | 관심 분야 논문을 수집·요약하고 영어·한국어 digest를 만드는 스킬 | [claude-skills-daily-papers](https://github.com/mlilab/claude-skills-daily-papers) ([가져온 버전](https://github.com/mlilab/claude-skills-daily-papers/tree/0e8aa0550e064492e7fb1ac442395b6c9a2d9823)) |
+| [Chain-of-Evidence](skills/chain-of-evidence/README.md) | 논문·보고서의 모든 주장(수치·인용·방법·결론)을 근거에 연결해 작성(WRITE)하거나, 완성된 문서를 코드·로그·참고문헌과 대조해 검증(AUDIT)하는 스킬 | — |
 
 ## 설치
 
