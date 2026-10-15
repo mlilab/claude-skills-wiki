@@ -276,10 +276,14 @@ def pdf_pages(pdf: Path, sections: list, figures: list) -> int:
         if hit is not None:
             s["page"], cursor = hit + 1, hit
     for f in figures:
-        label = ("table" if f["kind"] == "table" else "figure") + f" {f['number']}"
-        pats = [label + ":", label + ".", ("fig. " + f["number"] + ":") if f["kind"] == "figure" else label]
+        # a caption is "Figure 3:" / "Figure 3." / "Figure 3 |" (the separator may sit on the next line);
+        # "see Figure 3)" in the text is not a caption
+        word = r"table" if f["kind"] == "table" else r"(?:figure|fig\.)"
+        num = re.escape(f["number"].lower())
+        inline = re.compile(rf"\b{word}\s*{num}\s*[:.|]")
+        alone = re.compile(rf"^{word}\s*{num}\s*([:.|].*)?$")  # "Figure 1" on its own line
         for i, t in enumerate(texts):
-            if any(p in t for p in pats):
+            if inline.search(t) or any(alone.match(ln) for ln in lines[i]):
                 f["page"] = i + 1
                 break
     return len(texts)
@@ -359,7 +363,7 @@ def pdf_extract(pdf: Path, out_dir: Path) -> dict:
     return {"sections": sections, "figures": figures}
 
 
-def crop_pdf_figures(doc, out_dir: Path) -> list:
+def crop_pdf_figures(doc, out_dir: Path, only: set | None = None) -> list:
     """Crop each 'Figure N:' region: the union of images/drawings above the caption, rendered at 2x."""
     import pymupdf
     figs, seen = [], set()
@@ -369,16 +373,28 @@ def crop_pdf_figures(doc, out_dir: Path) -> list:
         visuals = [pymupdf.Rect(r) for r in
                    [x["bbox"] for x in page.get_image_info()] + [d["rect"] for d in page.get_drawings()]]
         for b in blocks:
-            m = re.match(r"^(Figure|Fig\.)\s*(\d+)\s*[:.]\s*(.*)", " ".join(b[4].split()))
-            if not m or m.group(2) in seen:
+            # "Figure 3: ..." or "Figure 3" alone on the first line of the caption block
+            m = re.match(r"^\s*(Figure|Fig\.)\s*(\d+)\s*(?:[:.|]|\n)\s*(.*)", b[4], re.S)
+            if not m or m.group(2) in seen or (only is not None and m.group(2) not in only):
                 continue
             cap = pymupdf.Rect(b[:4])
             above = [v for v in visuals if v.y1 <= cap.y0 + 2 and v.y0 >= cap.y0 - page.rect.height * 0.75
                      and v.x1 > cap.x0 - 20 and v.x0 < cap.x1 + 20 and v.width > 4 and v.height > 4]
+            # a frame around a long paragraph (e.g. an abstract box) is not part of a figure
+            long_text = [pymupdf.Rect(tb[:4]) for tb in blocks if len(tb[4].strip()) > 200]
+            above = [v for v in above if not any(v.contains(t) for t in long_text)]
             if not above:
                 continue
+            # grow upward from the caption; stop at a body paragraph between two drawings
+            above.sort(key=lambda v: -v.y1)
             region = pymupdf.Rect(above[0])
             for v in above[1:]:
+                gap_top, gap_bottom = v.y1, region.y0
+                if any(t.y0 >= gap_top - 2 and t.y1 <= gap_bottom + 2 and t.x1 > region.x0 and t.x0 < region.x1
+                       for t in long_text):
+                    break
+                if gap_bottom - gap_top > 18 and region.height > 120:  # clear white band above a full figure
+                    break
                 region |= v
             for tb in blocks:  # short labels just above or inside the drawing (panel titles, axis names)
                 r = pymupdf.Rect(tb[:4])
@@ -393,7 +409,7 @@ def crop_pdf_figures(doc, out_dir: Path) -> list:
             page.get_pixmap(clip=region, dpi=200).save(out_dir / name)
             seen.add(m.group(2))
             figs.append({"kind": "figure", "number": m.group(2), "html_id": None,
-                         "caption": m.group(3)[:600], "section": "", "section_title": "",
+                         "caption": " ".join(m.group(3).split())[:600], "section": "", "section_title": "",
                          "top_section": "", "in_appendix": False, "page": pno, "image_urls": [],
                          "files": [f"figures/{name}"], "png_files": [f"figures/{name}"], "table_html": None})
     return sorted(figs, key=lambda f: int(f["number"]))
@@ -526,8 +542,13 @@ def fetch_html(meta: dict):
         r.encoding = "utf-8"
         parsed = parse_html(r.text, r.url)
         got = title_tokens(parsed["title"])
-        if want and len(want & got) / max(1, len(want)) < 0.7:
-            log(f"HTML title mismatch at {url}: {parsed['title']!r}")
+        if got:
+            same = len(want & got) / max(1, len(want)) >= 0.7
+        else:  # the title is an image (logo): compare the abstracts instead
+            a, b = title_tokens(meta.get("abstract", "")), title_tokens(parsed["abstract"])
+            same = bool(a) and len(a & b) / max(1, len(a)) >= 0.6
+        if want and not same:
+            log(f"HTML does not match the arXiv record at {url}: title {parsed['title']!r}")
             continue
         return parsed, r.url
     return None, None
@@ -586,6 +607,15 @@ def main():
         meta["links"]["html"] = html_url
         download_images(figures, pdir / "figures")
         n_pages = pdf_pages(pdf, sections, figures) if pdf.exists() else 0
+        # main figures the HTML could not render (e.g. TikZ drawings): crop them from the PDF
+        missing = {f["number"] for f in figures if f["kind"] == "figure" and not f["in_appendix"] and not f.get("files")}
+        if missing and pdf.exists():
+            import pymupdf
+            for crop in crop_pdf_figures(pymupdf.open(pdf), pdir / "figures", only=missing):
+                f = next(x for x in figures if x["kind"] == "figure" and x["number"] == crop["number"])
+                f.update({"files": crop["files"], "png_files": crop["png_files"], "page": f.get("page") or crop["page"],
+                          "source": "pdf-crop"})
+                log(f"  Figure {crop['number']}: cropped from the PDF (no image in the HTML)")
     elif pdf.exists():
         source = "pdf"
         got = pdf_extract(pdf, pdir / "figures")
