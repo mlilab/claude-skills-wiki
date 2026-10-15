@@ -502,9 +502,13 @@ def table_text(table_html: str, max_rows: int = 60) -> str:
 
 def write_content(pdir: Path, meta: dict, sections: list, figures: list):
     lines = [f"# {meta['title']}", "", "## Abstract", "", meta.get("abstract", ""), ""]
-    fig_by_sec = {}
+    fig_by_sec, loose = {}, []
     for f in figures:
-        fig_by_sec.setdefault(f.get("section") or f.get("top_section"), []).append(f)
+        key = f.get("section") or f.get("top_section")
+        (fig_by_sec.setdefault(key, []) if key else loose).append(f)
+    for f in loose:  # figures before the first section (e.g. a teaser): once, after the abstract
+        kind = "Table" if f["kind"] == "table" else "Figure"
+        lines += [f"[[{kind} {f['number']}]] {f['caption']}", ""]
     app_started = False
     for s in sections:
         if s["in_appendix"] and not app_started:
@@ -515,7 +519,7 @@ def write_content(pdir: Path, meta: dict, sections: list, figures: list):
         lines += [f"{hashes} {s['number']} {s['title']}{page}".replace("  ", " "), ""]
         for p in s["paragraphs"]:
             lines += [f"[{p['id']}] {p['text']}", ""]
-        for f in fig_by_sec.get(s["number"], []):
+        for f in (fig_by_sec.get(s["number"], []) if s["number"] else []):
             kind = "Table" if f["kind"] == "table" else "Figure"
             lines += [f"[[{kind} {f['number']}]] {f['caption']}", ""]
             if f.get("table_html"):
