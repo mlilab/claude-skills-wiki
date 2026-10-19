@@ -1,0 +1,8 @@
+slack_sdk
+holidays
+beautifulsoup4
+requests
+cloudscraper
+easyocr
+gspread
+Pillow
