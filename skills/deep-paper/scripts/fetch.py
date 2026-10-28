@@ -276,10 +276,14 @@ def pdf_pages(pdf: Path, sections: list, figures: list) -> int:
         if hit is not None:
             s["page"], cursor = hit + 1, hit
     for f in figures:
-        label = ("table" if f["kind"] == "table" else "figure") + f" {f['number']}"
-        pats = [label + ":", label + ".", ("fig. " + f["number"] + ":") if f["kind"] == "figure" else label]
+        # a caption is "Figure 3:" / "Figure 3." / "Figure 3 |" (the separator may sit on the next line);
+        # "see Figure 3)" in the text is not a caption
+        word = r"table" if f["kind"] == "table" else r"(?:figure|fig\.)"
+        num = re.escape(f["number"].lower())
+        inline = re.compile(rf"\b{word}\s*{num}\s*[:.|]")
+        alone = re.compile(rf"^{word}\s*{num}\s*([:.|].*)?$")  # "Figure 1" on its own line
         for i, t in enumerate(texts):
-            if any(p in t for p in pats):
+            if inline.search(t) or any(alone.match(ln) for ln in lines[i]):
                 f["page"] = i + 1
                 break
     return len(texts)
@@ -295,6 +299,8 @@ def pdf_lines(doc):
                 if not spans:
                     continue
                 text = " ".join("".join(sp["text"] for sp in spans).split())
+                if re.fullmatch(r"\d{3}", text):  # line numbers in review templates (ICLR, NeurIPS, ...)
+                    continue
                 size = max(sp["size"] for sp in spans)
                 bold = all(("Bold" in sp["font"] or sp["flags"] & 16) for sp in spans)
                 rows.append((pno, text, round(size, 1), bold))
@@ -312,6 +318,21 @@ def pdf_extract(pdf: Path, out_dir: Path) -> dict:
     doc = pymupdf.open(pdf)
     rows = pdf_lines(doc)
     body_size = statistics.median([r[2] for r in rows]) if rows else 10
+    # some templates (ICLR, NeurIPS) print the number and an upper-case title on separate lines:
+    # "3.1" / "GENERATING A TRAINING DATASET". Join them and mark the result as a heading.
+    joined, k, forced = [], 0, set()
+    while k < len(rows):
+        pno, text, size, bold = rows[k]
+        nxt = rows[k + 1] if k + 1 < len(rows) else None
+        if (nxt and nxt[0] == pno and re.fullmatch(r"(?:[1-9]\d?|[A-H])(?:\.\d+){0,2}", text)
+                and re.fullmatch(r"[A-Z][A-Z0-9 ,:\-–()/&'?]{2,90}", nxt[1]) and sum(c.isalpha() for c in nxt[1]) >= 3):
+            joined.append((pno, f"{text} {nxt[1]}", max(size, nxt[2]), bold or nxt[3]))
+            forced.add(len(joined) - 1)
+            k += 2
+            continue
+        joined.append(rows[k])
+        k += 1
+    rows = joined
     toc = {(t.strip().lower()[:40]): (lvl, pno) for lvl, t, pno in doc.get_toc()}
     sections, cur, app, para = [], None, False, []
 
@@ -322,9 +343,9 @@ def pdf_extract(pdf: Path, out_dir: Path) -> dict:
                                       "mentions": sorted(set(re.findall(r"(?:Figure|Fig\.)\s*(\d+)", txt)))})
         para.clear()
 
-    for pno, text, size, bold in rows:
+    for idx, (pno, text, size, bold) in enumerate(rows):
         m = HEAD_RE.match(text)
-        is_head = bool(m) and (bold or size > body_size + 0.5 or text.lower()[:40] in toc)
+        is_head = bool(m) and (idx in forced or bold or size > body_size + 0.5 or text.lower()[:40] in toc)
         if m and m.group(1)[0].isalpha() and not app:
             is_head = is_head and bool(re.match(r"^[A-H]$", m.group(1)))  # appendix letters only at top level
         if is_head:
@@ -359,7 +380,62 @@ def pdf_extract(pdf: Path, out_dir: Path) -> dict:
     return {"sections": sections, "figures": figures}
 
 
-def crop_pdf_figures(doc, out_dir: Path) -> list:
+def parse_pdf_refs(doc, sections: list) -> dict:
+    """Bibliography of a PDF-only paper: entries start at the left margin after the "References"
+    heading and continue with a hanging indent. Each entry gets an author-year label
+    ("Brooks et al., 2023"), a title guess and any arXiv id it names; cited_in lists the sections
+    whose text contains the label's surname and year."""
+    entries, cur, started, left = [], None, False, None
+    for pno, page in enumerate(doc, 1):
+        for b in page.get_text("blocks"):
+            t = " ".join(b[4].split())
+            if not t or re.fullmatch(r"[\d ]+", t) or t.startswith("Under review as"):
+                continue
+            if not started:
+                if re.fullmatch(r"(?i)references|bibliography", t):
+                    started = True
+                continue
+            if re.fullmatch(r"[A-H](\.\d+)?\s+[A-Z][A-Z0-9 ,:\-–()/&'?]{2,90}", t) or re.fullmatch(r"[A-H]", t):
+                started = False  # the appendix begins
+                break
+            if left is None:
+                left = b[0]
+            if b[0] <= left + 4 or cur is None:
+                cur = {"text": t}
+                entries.append(cur)
+            else:
+                cur["text"] += " " + t
+        if started is False and entries:
+            break
+    refs = {}
+    for k, e in enumerate(entries, 1):
+        t = re.sub(r"(\w)- (\w)", r"\1\2", e["text"])
+        parts = re.split(r"(?<=[a-z0-9\)])\.\s+(?=[A-Z0-9])", t, maxsplit=2)
+        authors = parts[0] if parts else ""
+        title = parts[1].strip().rstrip(".") if len(parts) > 1 else ""
+        title = re.split(r"\.\s+(?:arXiv|In\s|Proceedings|Advances|CoRR|Computer Science|https?:)", title)[0].rstrip(".")
+        first = authors.split(",")[0].strip().split(" and ")[0].strip()
+        surname = first.split()[-1] if first.split() else ""
+        n_auth = authors.count(",") + 1 + (" and " in authors)
+        years = re.findall(r"\b(19|20)(\d{2})[a-z]?\b", t)
+        year = (years[-1][0] + years[-1][1]) if years else ""
+        label = (f"{surname} et al., {year}" if n_auth > 2 else f"{surname}, {year}").strip(", ")
+        m = re.search(r"arXiv[:\s]*(\d{4}\.\d{4,5})", t, re.I) or re.search(r"arxiv\.org/(?:abs|pdf)/(\d{4}\.\d{4,5})", t)
+        aid = m.group(1) if m else None
+        key = f"ref{k}"
+        cited = []
+        if surname and year:
+            pat = re.compile(rf"\b{re.escape(surname)}\b[^()]{{0,60}}?\b{year}")
+            for s in sections:
+                if any(pat.search(p["text"]) for p in s["paragraphs"]):
+                    cited.append(s["number"] or s["title"])
+        refs[key] = {"key": key, "label": label, "title": title, "text": t[:400], "arxiv_id": aid,
+                     "url": f"https://arxiv.org/abs/{aid}" if aid else None,
+                     "url_source": "bibliography" if aid else None, "cited_in": cited}
+    return refs
+
+
+def crop_pdf_figures(doc, out_dir: Path, only: set | None = None) -> list:
     """Crop each 'Figure N:' region: the union of images/drawings above the caption, rendered at 2x."""
     import pymupdf
     figs, seen = [], set()
@@ -369,16 +445,28 @@ def crop_pdf_figures(doc, out_dir: Path) -> list:
         visuals = [pymupdf.Rect(r) for r in
                    [x["bbox"] for x in page.get_image_info()] + [d["rect"] for d in page.get_drawings()]]
         for b in blocks:
-            m = re.match(r"^(Figure|Fig\.)\s*(\d+)\s*[:.]\s*(.*)", " ".join(b[4].split()))
-            if not m or m.group(2) in seen:
+            # "Figure 3: ..." or "Figure 3" alone on the first line of the caption block
+            m = re.match(r"^\s*(Figure|Fig\.)\s*(\d+)\s*(?:[:.|]|\n)\s*(.*)", b[4], re.S)
+            if not m or m.group(2) in seen or (only is not None and m.group(2) not in only):
                 continue
             cap = pymupdf.Rect(b[:4])
             above = [v for v in visuals if v.y1 <= cap.y0 + 2 and v.y0 >= cap.y0 - page.rect.height * 0.75
                      and v.x1 > cap.x0 - 20 and v.x0 < cap.x1 + 20 and v.width > 4 and v.height > 4]
+            # a frame around a long paragraph (e.g. an abstract box) is not part of a figure
+            long_text = [pymupdf.Rect(tb[:4]) for tb in blocks if len(tb[4].strip()) > 200]
+            above = [v for v in above if not any(v.contains(t) for t in long_text)]
             if not above:
                 continue
+            # grow upward from the caption; stop at a body paragraph between two drawings
+            above.sort(key=lambda v: -v.y1)
             region = pymupdf.Rect(above[0])
             for v in above[1:]:
+                gap_top, gap_bottom = v.y1, region.y0
+                if any(t.y0 >= gap_top - 2 and t.y1 <= gap_bottom + 2 and t.x1 > region.x0 and t.x0 < region.x1
+                       for t in long_text):
+                    break
+                if gap_bottom - gap_top > 18 and region.height > 120:  # clear white band above a full figure
+                    break
                 region |= v
             for tb in blocks:  # short labels just above or inside the drawing (panel titles, axis names)
                 r = pymupdf.Rect(tb[:4])
@@ -393,7 +481,7 @@ def crop_pdf_figures(doc, out_dir: Path) -> list:
             page.get_pixmap(clip=region, dpi=200).save(out_dir / name)
             seen.add(m.group(2))
             figs.append({"kind": "figure", "number": m.group(2), "html_id": None,
-                         "caption": m.group(3)[:600], "section": "", "section_title": "",
+                         "caption": " ".join(m.group(3).split())[:600], "section": "", "section_title": "",
                          "top_section": "", "in_appendix": False, "page": pno, "image_urls": [],
                          "files": [f"figures/{name}"], "png_files": [f"figures/{name}"], "table_html": None})
     return sorted(figs, key=lambda f: int(f["number"]))
@@ -486,9 +574,13 @@ def table_text(table_html: str, max_rows: int = 60) -> str:
 
 def write_content(pdir: Path, meta: dict, sections: list, figures: list):
     lines = [f"# {meta['title']}", "", "## Abstract", "", meta.get("abstract", ""), ""]
-    fig_by_sec = {}
+    fig_by_sec, loose = {}, []
     for f in figures:
-        fig_by_sec.setdefault(f.get("section") or f.get("top_section"), []).append(f)
+        key = f.get("section") or f.get("top_section")
+        (fig_by_sec.setdefault(key, []) if key else loose).append(f)
+    for f in loose:  # figures before the first section (e.g. a teaser): once, after the abstract
+        kind = "Table" if f["kind"] == "table" else "Figure"
+        lines += [f"[[{kind} {f['number']}]] {f['caption']}", ""]
     app_started = False
     for s in sections:
         if s["in_appendix"] and not app_started:
@@ -499,7 +591,7 @@ def write_content(pdir: Path, meta: dict, sections: list, figures: list):
         lines += [f"{hashes} {s['number']} {s['title']}{page}".replace("  ", " "), ""]
         for p in s["paragraphs"]:
             lines += [f"[{p['id']}] {p['text']}", ""]
-        for f in fig_by_sec.get(s["number"], []):
+        for f in (fig_by_sec.get(s["number"], []) if s["number"] else []):
             kind = "Table" if f["kind"] == "table" else "Figure"
             lines += [f"[[{kind} {f['number']}]] {f['caption']}", ""]
             if f.get("table_html"):
@@ -526,8 +618,13 @@ def fetch_html(meta: dict):
         r.encoding = "utf-8"
         parsed = parse_html(r.text, r.url)
         got = title_tokens(parsed["title"])
-        if want and len(want & got) / max(1, len(want)) < 0.7:
-            log(f"HTML title mismatch at {url}: {parsed['title']!r}")
+        if got:
+            same = len(want & got) / max(1, len(want)) >= 0.7
+        else:  # the title is an image (logo): compare the abstracts instead
+            a, b = title_tokens(meta.get("abstract", "")), title_tokens(parsed["abstract"])
+            same = bool(a) and len(a & b) / max(1, len(a)) >= 0.6
+        if want and not same:
+            log(f"HTML does not match the arXiv record at {url}: title {parsed['title']!r}")
             continue
         return parsed, r.url
     return None, None
@@ -586,10 +683,21 @@ def main():
         meta["links"]["html"] = html_url
         download_images(figures, pdir / "figures")
         n_pages = pdf_pages(pdf, sections, figures) if pdf.exists() else 0
+        # main figures the HTML could not render (e.g. TikZ drawings): crop them from the PDF
+        missing = {f["number"] for f in figures if f["kind"] == "figure" and not f["in_appendix"] and not f.get("files")}
+        if missing and pdf.exists():
+            import pymupdf
+            for crop in crop_pdf_figures(pymupdf.open(pdf), pdir / "figures", only=missing):
+                f = next(x for x in figures if x["kind"] == "figure" and x["number"] == crop["number"])
+                f.update({"files": crop["files"], "png_files": crop["png_files"], "page": f.get("page") or crop["page"],
+                          "source": "pdf-crop"})
+                log(f"  Figure {crop['number']}: cropped from the PDF (no image in the HTML)")
     elif pdf.exists():
         source = "pdf"
         got = pdf_extract(pdf, pdir / "figures")
-        sections, figures, refs = got["sections"], got["figures"], {}
+        sections, figures = got["sections"], got["figures"]
+        import pymupdf
+        refs = parse_pdf_refs(pymupdf.open(pdf), sections)
         import pymupdf
         n_pages = len(pymupdf.open(pdf))
     else:
