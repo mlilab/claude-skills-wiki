@@ -1,0 +1,29 @@
+{
+  "skill_name": "server-disk-usage",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "서버 디스크가 거의 다 찼대. 100G 정도 더 확보해야 하는데 누구한테 정리 부탁하면 될까?",
+      "expected_output": "Runs `free` (disk and saved priority/sheet lists), asks the top folder and the priority/sheet question (the target is given), scans with --need 100G and the lists, reports 이번에/모자라면 contacts in the lab's order (general, then sheet, then priority; under 20G left out), runs `messages` and pastes the 이번에 people's messages and the server-state notice into the answer in fenced blocks, sends and deletes nothing, gives report paths and the cost line.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "내 workspace 정리 좀 하고 싶은데, 어떤 폴더가 큰지랑 오래된 게 뭔지 보여줘. 경로는 /home/server01/alice_workspace",
+      "expected_output": "Skips the scope question (path given), uses folder mode on that path, lists folders with size, unmodified and cold shares, inspects the largest candidate with show --files, and suggests cleanup without deleting.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "공용 huggingface cache랑 anaconda envs, docker 이미지가 누구 건지 알 수 있어? 확실하지 않으면 추정이라도.",
+      "expected_output": "User-mode scan; lists shared items with owner and certainty (direct with its evidence, estimated with its name basis, unknown); runs evidence checks on the largest uncertain items and never presents an estimate as confirmed.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "server01 용량 정리해야 하는데, 우선권은 bob이고 시트에는 carol 적혀 있어. 150G 확보하고 싶어.",
+      "expected_output": "Skips all questions it can (target, lists given; asks at most the top folder), saves the lists, ranks general users first, attributes docker volumes to bob as estimated and asks bob only about old data, pastes the messages and a notice for untraced HF models into the answer with tomorrow as the deadline.",
+      "files": []
+    }
+  ]
+}

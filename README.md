@@ -7,6 +7,7 @@ This repository collects Claude Code and Codex skills shared by the team. **Each
 | [Daily Papers](skills/daily-papers/README.md) | Collects and summarizes research papers in selected areas and builds an English and Korean digest. |
 | [Chain-of-Evidence](skills/chain-of-evidence/README.md) | Connects claims in papers and reports to supporting evidence when writing, or audits completed documents against code, logs, and references. |
 | [Deep Paper](skills/deep-paper/README.md) | Reads one paper in depth, section by section, with figures in place and linked citations, and saves it to Notion or an HTML site with the PDF side by side. |
+| [Server Disk Usage](skills/server-disk-usage/README.md) | Measures who uses how much disk on a shared lab server, including shared conda, Hugging Face and docker data, and drafts tidy-up requests by the lab's priority and sheet rules without deleting anything. |
 
 ## Installation
 
