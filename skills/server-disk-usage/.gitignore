@@ -1,0 +1,4 @@
+results/
+roles/
+__pycache__/
+*.pyc
