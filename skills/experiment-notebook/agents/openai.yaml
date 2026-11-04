@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experiment Notebook"
+  short_description: "Experiment reports, Git provenance, monitoring, and lineage"
+  default_prompt: "Use $experiment-notebook to connect Git provenance, monitor this experiment, and report its hypotheses, parent differences, results, and required fixes."
