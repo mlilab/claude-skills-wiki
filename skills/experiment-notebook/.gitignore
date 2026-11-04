@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 tests/.tmp/
 .experiment-notebook/
+.notifications*.sqlite3*
+/notebook.json
+/GUIDE.md
+/experiments/
+/site/
+/.env
+/slack-token

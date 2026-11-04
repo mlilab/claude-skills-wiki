@@ -12,8 +12,9 @@ local viewer. It is not an authenticated public hosting service.
 The dashboard polls `/api/status` every 20 seconds for state, phase, progress, and elapsed time.
 It preserves the search text. Rebuild after
 editing report text or registering artifacts. Observations do not rebuild reports or rewrite
-study state. Publication, service installation, messaging, and conducting research require
-their own user request and are not part of the default pipeline.
+study state. Configured Slack alerts run through a separate monitor process described in
+[slack.md](slack.md). Neither `/api/status` nor `/api/notifications` sends a message.
+Publication, service installation, and conducting research remain separate tasks.
 
 ## Optional read-only observation
 

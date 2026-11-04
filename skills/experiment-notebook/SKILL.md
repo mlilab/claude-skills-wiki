@@ -1,7 +1,7 @@
 ---
 name: experiment-notebook
 description: >-
-  Connect research to Git provenance, monitor experiments, draw inheritance diagrams, and
+  Connect research to Git provenance, monitor experiments with Slack lifecycle alerts, draw inheritance diagrams, and
   write HTML reports with execution commits, purpose and hypotheses, parent differences,
   results, and required fixes. Preserve evidence and separate plans from actual execution.
   Use for 실험 보고서, 연구 노트, 연구 계보, experiment dashboards, and recording research
@@ -17,7 +17,7 @@ observational study, simulation, analysis, or literature-based investigation. Ke
 concise and link supporting detail. This skill does not conduct or rerun the research itself.
 
 The core workflow is **connect Git → prepare the report and parent relationship → record
-execution provenance → monitor → report results and required changes**. Preserve these
+execution provenance → monitor and notify → report results and required changes**. Preserve these
 capabilities when adapting the notebook to another field. Domain roles, models, reward formulas,
 budgets, and artifact paths belong to the user's project, not this skill's defaults.
 
@@ -152,6 +152,30 @@ its Linux start tick. The dashboard polls status, phase, progress, and elapsed t
 seconds. Use `field_paths` to adapt a project's JSON structure. If no live source is available,
 label the view as recorded status only. Do not claim that an unconnected experiment is monitored.
 The monitor does not change experiment state or restart the process.
+
+## Slack lifecycle notifications
+
+When Slack notifications are requested, read [references/slack.md](references/slack.md).
+Configure the user's chosen channel or DM and a bot-token environment/file reference in the
+private notebook. Never hardcode a workspace, recipient, or credential in the shared skill.
+Do not assume that a request to add this capability authorizes a test message to an unspecified target.
+
+```bash
+python3 <skill>/scripts/notebook.py configure-slack --root <book> --channel <channel-id> --token-env SLACK_BOT_TOKEN
+python3 <skill>/scripts/notebook.py monitor --root <book> --once --dry-run
+python3 <skill>/scripts/notebook.py monitor --root <book>
+```
+
+Run the monitor independently of the browser and before the actual experiment when possible.
+It sends start/attach/resume, configured progress, completion, stop, failure, and attention events.
+Existing historical terminal runs are not replayed. A late attachment is labeled as monitoring
+an already active run. Progress defaults to changed observations at 30-minute intervals.
+
+The private outbox preserves delivery and observation state across restarts. Failed Slack
+delivery does not stop the research. Uncertain delivery requires an explicit resolution from
+the actual Slack conversation before another attempt. See `notification-status` and
+`resolve-notification` in the reference.
+The web server and `GET` endpoints never send messages.
 
 The SVG inheritance diagram links explicit research parents to children and opens their reports.
 Execution order, reference data, and restarts do not create parent edges automatically.

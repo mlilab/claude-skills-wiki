@@ -16,6 +16,7 @@ A record can represent an experiment, observation, analysis, or other coherent s
 | `sections` | Ordered mapping of section keys to display titles. Customize names, order, and selection. |
 | `request_feedback` | Whether new records start with review pending. Default: `false`. |
 | `max_artifact_bytes` | Maximum source bytes for one evidence view. Default: 16 MiB. |
+| `notifications.slack` | Opt-in channel/DM target, token environment/file reference, selected events, progress interval, and retry limit. See [slack.md](slack.md). |
 
 For example, a qualitative study can use:
 

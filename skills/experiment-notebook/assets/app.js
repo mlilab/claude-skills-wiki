@@ -27,6 +27,14 @@ if (search) {
         });
       }
       document.querySelector('#observed-at').textContent = `${data.observed_label}: ${data.observed_at}`;
+      const panel = document.querySelector('#notification-status');
+      if (panel) {
+        const notifications = await fetch('/api/notifications', {cache: 'no-store'});
+        if (notifications.ok) {
+          const state = await notifications.json();
+          panel.textContent = [state.label, ...Object.entries(state.counts).map(([key, value]) => `${key} ${value}`), state.last_error].filter(Boolean).join(' · ');
+        }
+      }
     } catch (_) { /* Static HTML also works without the server. */ }
   };
   refresh();

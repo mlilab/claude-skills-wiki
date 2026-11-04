@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sqlite3
 import tempfile
 from urllib.parse import unquote, urlsplit
 from zoneinfo import ZoneInfo
@@ -18,6 +19,7 @@ from views import artifact_view, dump, esc, fields, prose, read_source, redact, 
 from labels import SECTION_TITLES, text
 from git_provenance import snapshot as repository_snapshot, connect as connect_repository, capture as capture_code
 from lineage import diagram
+import notifications
 
 
 SKILL = Path(__file__).resolve().parents[1]
@@ -82,6 +84,7 @@ def config(root):
     if data.get("repository") is not None and not isinstance(data["repository"], str):
         raise ValueError("repository must be a local path or null.")
     ZoneInfo(data["timezone"])
+    notifications.settings(data)
     return data
 
 
@@ -556,7 +559,9 @@ def build(root):
             git_panel = '<aside><strong>' + tr("repository_now") + '</strong>' + fields(repository_snapshot(cfg["repository"])) + '</aside>'
         except (OSError, ValueError) as error:
             result["warnings"].append(str(error))
-    body = '<p class="muted">' + tr("order_note") + '</p><input id="search" aria-label="' + tr("search") + '" placeholder="' + tr("search") + '"><div class="grid">' + "".join(cards) + '</div><main><h2>' + tr("lineage") + '</h2>' + lineage([(d, redact(r)) for d, r in rows], language) + '</main><p id="observed-at" class="muted"></p>'
+    slack_enabled = notifications.settings(cfg)["enabled"]
+    notification_panel = '<aside><strong>Slack</strong><p id="notification-status">' + esc(tr("slack_enabled") if slack_enabled else tr("slack_disabled")) + '</p></aside>'
+    body = notification_panel + '<p class="muted">' + tr("order_note") + '</p><input id="search" aria-label="' + tr("search") + '" placeholder="' + tr("search") + '"><div class="grid">' + "".join(cards) + '</div><main><h2>' + tr("lineage") + '</h2>' + lineage([(d, redact(r)) for d, r in rows], language) + '</main><p id="observed-at" class="muted"></p>'
     output("index.html", page(cfg.get("title", "Experiment notebook"), git_panel + body, generated=generated, language=language))
     write_json(root, ".site-manifest.json", {"generated_at": generated, "files": manifest})
     return dict(result, site=str(root / "site" / "index.html"), generated_at=generated)
@@ -576,6 +581,13 @@ class Handler(BaseHTTPRequestHandler):
             if route == "/api/status":
                 language = config(self.root)["language"]
                 data = {"observed_at": now(), "observed_label": text("observed", language), "experiments": [observe(d, r, language) for d, r in reports(self.root)]}
+                content, mime = dump(data).encode(), "application/json; charset=utf-8"
+            elif route == "/api/notifications":
+                cfg = config(self.root)
+                enabled = notifications.settings(cfg)["enabled"]
+                summary = notifications.status(self.root)
+                data = {"enabled": enabled, "label": text("slack_enabled" if enabled else "slack_disabled", cfg["language"]),
+                        "counts": summary["counts"], "last_error": summary["last_error"]}
                 content, mime = dump(data).encode(), "application/json; charset=utf-8"
             else:
                 relative = "index.html" if route == "/" else route.lstrip("/")
@@ -604,7 +616,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             if not head:
                 self.wfile.write(content)
-        except (OSError, ValueError, KeyError, TypeError):
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error):
             self.send_error(503, "Notebook cannot be read. Check the local records and build.")
 
     def log_message(self, *_):
@@ -614,7 +626,8 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("init", "new", "connect-git", "git-status", "capture-git", "check", "build", "serve"):
+    for command in ("init", "new", "connect-git", "git-status", "capture-git", "configure-slack",
+                    "monitor", "notification-status", "resolve-notification", "check", "build", "serve"):
         child = sub.add_parser(command)
         child.add_argument("--root", type=Path, required=True)
         if command == "init":
@@ -631,6 +644,22 @@ def main():
             child.add_argument("--experiment", required=True)
             child.add_argument("--stage", choices=("preparation", "execution", "reporting"), default="preparation")
             child.add_argument("--phase", required=True)
+        if command == "configure-slack":
+            targets = child.add_mutually_exclusive_group(required=True)
+            targets.add_argument("--channel")
+            targets.add_argument("--user")
+            secrets = child.add_mutually_exclusive_group()
+            secrets.add_argument("--token-env", default="SLACK_BOT_TOKEN")
+            secrets.add_argument("--token-file", type=Path)
+            child.add_argument("--progress-interval", type=int, default=1800)
+        if command == "monitor":
+            child.add_argument("--once", action="store_true")
+            child.add_argument("--dry-run", action="store_true")
+            child.add_argument("--interval", type=float, default=20)
+        if command == "resolve-notification":
+            child.add_argument("--event", required=True)
+            child.add_argument("--outcome", choices=("sent", "not-sent"), required=True)
+            child.add_argument("--note", required=True)
         if command == "serve":
             child.add_argument("--port", type=int, default=8782)
     args = parser.parse_args()
@@ -666,6 +695,25 @@ def main():
                     if args.stage == "execution" and record["status"] != "running":
                         raise ValueError("Execution capture requires a running record. Use historical evidence for past execution commits.")
                     result = capture_code(root, cfg["repository"], directory, record, args.stage, args.phase, write_json)
+        elif args.command == "configure-slack":
+            cfg = config(root)
+            slack = {"enabled": True, "token_env": args.token_env, "progress_interval_seconds": args.progress_interval}
+            slack["channel" if args.channel else "user"] = args.channel or args.user
+            if args.token_file:
+                slack["token_file"] = str(args.token_file.expanduser().resolve())
+            cfg.setdefault("notifications", {})["slack"] = slack
+            notifications.settings(cfg)
+            write_json(root, "notebook.json", cfg)
+            result = {"enabled": True, "target_kind": "channel" if args.channel else "user",
+                      "note": "Configuration saved. Start monitor to send lifecycle notifications. No Slack call was made."}
+        elif args.command == "monitor":
+            result = notifications.run_monitor(root, config, reports, observe, args.once, args.dry_run, args.interval)
+        elif args.command == "notification-status":
+            config(root)
+            result = notifications.status(root)
+        elif args.command == "resolve-notification":
+            config(root)
+            result = notifications.resolve(root, args.event, args.outcome, args.note)
         elif args.command == "check":
             result = validate(root)
         elif args.command == "build":
@@ -682,9 +730,14 @@ def main():
                 server.server_close()
             return 0
         print(json.dumps(redact(result), ensure_ascii=False, indent=2))
-        return 1 if result.get("errors") else 0
+        return 1 if result.get("errors") or result.get("error") else 0
     except (OSError, ValueError, KeyError, TypeError, RecursionError) as error:
         print(json.dumps({"error": redact(str(error))}, ensure_ascii=False))
+        return 1
+    except KeyboardInterrupt:
+        return 0
+    except sqlite3.Error:
+        print(json.dumps({"error": "Notification ledger is unavailable."}))
         return 1
 
 

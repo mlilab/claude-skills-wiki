@@ -7,7 +7,8 @@ and interpretations in an evidence-backed HTML notebook. Use it for computationa
 laboratory measurements, field observations, qualitative studies, or literature-based analyses.
 Each record represents a study or a coherent piece of research. Its core is **Git provenance,
 experiment monitoring, inheritance diagrams, and reports that connect purpose, hypotheses,
-parent differences, results, and required fixes**.
+parent differences, results, and required fixes**. Configured Slack alerts cover experiment
+start, progress, completion, interruption, and failure.
 
 The skill has no project-specific roles, scoring formula, model, budget, or experimental protocol.
 Code-based studies connect their source Git repository. Non-code studies can use protocol or
@@ -20,6 +21,7 @@ are optional.
 | --- | --- |
 | Git connection | Connects a local source repository and captures its full commit, branch, dirty state, changed paths, and sanitized remotes. Separates preparation, execution, and reporting versions. |
 | Experiment monitoring | Polls state, phase, progress, elapsed time, and optional Linux process identity without changing the experiment. Marks unconnected records as recorded-status only. |
+| Slack lifecycle alerts | Sends configured channel/DM alerts through a separate monitor process. Keeps a durable outbox across restarts, throttles progress notices, and preserves uncertain delivery for review. |
 | Inheritance diagram | Draws an SVG parent-to-child diagram with branches and report links. Reference sources, restarts, and chronological order remain separate. |
 | Report essentials | Keeps actual execution commits, purpose/hypotheses, differences from the parent, results, analysis, and required fixes with their reasons and validation status. |
 | Other provenance | Records protocols, instruments, data sources, sample identifiers, or analysis versions for the study. |
@@ -113,10 +115,39 @@ as `pending` when review is requested. Observed results and review conclusions r
 See [Git provenance](references/git.md), the [record schema](references/schema.md), [writing guide](references/report-guide.md),
 [evidence adapters](references/evidence.md), and [server notes](references/server.md).
 
+## Slack notifications
+
+Create a Slack app with a bot token and `chat:write`. Invite it to the target channel.
+For a user-ID DM target, also grant `im:write`. Keep the bot token in `SLACK_BOT_TOKEN` or an
+existing private token file. Configuration stores a reference, not the token value.
+
+```bash
+python3 /path/to/skill/scripts/notebook.py configure-slack --root /path/to/private-notebook --channel C0123456789 --token-env SLACK_BOT_TOKEN
+python3 /path/to/skill/scripts/notebook.py monitor --root /path/to/private-notebook --once --dry-run
+python3 /path/to/skill/scripts/notebook.py monitor --root /path/to/private-notebook
+```
+
+Replace the example channel ID with yours. Use `--user U0123456789` instead of `--channel` for
+a DM. Start the monitor before the experiment through your environment's background-process
+support or existing supervisor. The website alone does not send messages. Installing a service
+is a separate task. The monitor reads the same `watch` sources used by the dashboard.
+
+Start, resume, completion, stop, failure, and attention events are delivered as observed. A late
+attachment says “monitoring attached” rather than claiming a new start. Past finished experiments
+are not announced on first attachment. Changed progress is reported at most every 30 minutes
+by default. Change this with `--progress-interval` or disable it with 0.
+
+Use `notification-status --root /path/to/private-notebook` to inspect delivery states. Pending
+messages survive restarts. Known successes are not resent. Ambiguous delivery requires checking
+Slack and explicitly resolving the event before another attempt. A Slack failure does not stop
+the experiment. See [Slack setup and recovery](references/slack.md) for secret handling,
+configuration, rate limits, and the resolution commands. Alerts are disabled until configured.
+
 ## Scope and limits
 
-This skill documents existing or planned research. It does not conduct experiments, rerun analyses,
-change source projects, publish externally, send messages, or install recurring jobs.
+This skill documents existing or planned research and sends lifecycle messages only through
+explicitly configured Slack monitoring. It does not conduct experiments, rerun analyses,
+change source projects, publish notebook content externally, or install recurring jobs.
 Optional Linux PID observation requires a recorded process start tick. A completed procedure
 and a supported research claim are separate outcomes.
 
