@@ -9,6 +9,8 @@ This repository collects Claude Code and Codex skills shared by the team. **Each
 | [Deep Paper](skills/deep-paper/README.md) | Reads one paper in depth, section by section, with figures in place and linked citations, and saves it to Notion or an HTML site with the PDF side by side. |
 | [Server Disk Usage](skills/server-disk-usage/README.md) | Measures who uses how much disk on a shared lab server, including shared conda, Hugging Face and docker data, and drafts tidy-up requests by the lab's priority and sheet rules without deleting anything. |
 | [Experiment Notebook](skills/experiment-notebook/README.md) ([한국어](skills/experiment-notebook/README.ko.md)) | Connects Git provenance, monitors experiments with Slack lifecycle alerts, draws inheritance diagrams, and writes reports with hypotheses, parent differences, results, and required fixes. |
+| [Humanize Paper](skills/humanize-paper/README.md) | Rewrites or drafts English ML paper prose so it reads human-written and is easy to parse, keeping LaTeX, citations, numbers and claim scope intact. |
+| [Humanize Writing](skills/humanize-writing/README.md) | Rewrites or drafts resumes, statements, 자기소개서, applications, emails and posts in Korean or English so they read human-written, without inventing facts. |
 
 ## Installation
 
