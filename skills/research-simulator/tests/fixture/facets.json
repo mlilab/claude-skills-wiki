@@ -1,0 +1,201 @@
+{
+ "W100": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 0.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery",
+   "multi-depot"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient",
+   "attention"
+  ]
+ },
+ "W101": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 1.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient"
+  ]
+ },
+ "W102": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 2.",
+  "method": "Handcrafted constructive heuristic with local search improvement.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery"
+  ],
+  "method_tags": [
+   "heuristic",
+   "local-search"
+  ]
+ },
+ "W103": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 3.",
+  "method": "Mixed integer linear programming solved with branch and bound.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery"
+  ],
+  "method_tags": [
+   "milp",
+   "branch-and-bound",
+   "exact-method"
+  ]
+ },
+ "W104": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 4.",
+  "method": "Handcrafted constructive heuristic with local search improvement.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery",
+   "multi-depot"
+  ],
+  "method_tags": [
+   "heuristic",
+   "local-search"
+  ]
+ },
+ "W105": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 5.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient"
+  ]
+ },
+ "W106": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 6.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient",
+   "attention"
+  ]
+ },
+ "W107": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 7.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient"
+  ]
+ },
+ "W108": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 8.",
+  "method": "Handcrafted constructive heuristic with local search improvement.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing",
+   "multi-depot"
+  ],
+  "method_tags": [
+   "heuristic",
+   "local-search"
+  ]
+ },
+ "W109": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 9.",
+  "method": "Mixed integer linear programming solved with branch and bound.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing"
+  ],
+  "method_tags": [
+   "milp",
+   "branch-and-bound",
+   "exact-method"
+  ]
+ },
+ "W110": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 10.",
+  "method": "Handcrafted constructive heuristic with local search improvement.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing"
+  ],
+  "method_tags": [
+   "heuristic",
+   "local-search"
+  ]
+ },
+ "W111": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 11.",
+  "method": "Mixed integer linear programming solved with branch and bound.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery"
+  ],
+  "method_tags": [
+   "milp",
+   "branch-and-bound",
+   "exact-method"
+  ]
+ },
+ "W112": {
+  "problem": "Online 3D bin packing of boxes arriving one at a time into containers. Variant 12.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "bin-packing",
+   "online-packing",
+   "3d-packing",
+   "multi-depot"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient",
+   "attention"
+  ]
+ },
+ "W113": {
+  "problem": "Vehicle routing with time windows for last-mile delivery fleets. Variant 13.",
+  "method": "Deep reinforcement learning policy trained with PPO on simulated instances.",
+  "problem_tags": [
+   "vehicle-routing",
+   "time-windows",
+   "last-mile-delivery"
+  ],
+  "method_tags": [
+   "deep-rl",
+   "ppo",
+   "policy-gradient"
+  ]
+ }
+}

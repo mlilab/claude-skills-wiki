@@ -1,0 +1,1748 @@
+{
+ "schema": "research-simulator/2",
+ "meta": {
+  "title": "SSC Research Sim",
+  "created": "2026-11-05",
+  "source": "openalex (web tool)",
+  "queries": [
+   "search: TabPFN (works search, the only search call that succeeded before OpenAlex search quota errors)",
+   "autocomplete: tabular foundation model",
+   "autocomplete: tabpfn",
+   "autocomplete: tabpfn context (0 hits)",
+   "autocomplete: tabpfn v3 (0 hits)",
+   "autocomplete: TACO tabular (0 hits)",
+   "autocomplete: context compression tabular foundation (0 hits)",
+   "autocomplete: online continual learning from imbalanced data",
+   "doi-filter lookups (batches of 3): TabPFN v2, TabDPT, MotherNet, TabForestPFN, TabPFN-2.5, PFN, TuneTables, MixturePFN, LoCalPFN, TabFlex, Scaling TabPFN, TabR, Closer look TabPFN v2, evolving streams TFM, Dataset Distillation, DC, DM, KIP, k-center core-set, kernel herding, practical coresets, DeepCore, data pruning, SVGP, streaming sparse GP, Bauer sparse GP, Csato-Opper, Power EP, FRCL, Vitter reservoir, GDumb, Rainbow Memory, GSS, concept drift surveys, iCaRL, tiny episodic memories, online CL survey, gist, ICAE, AutoCompressors, LLMLingua, Selective Context, RECOMP, TabReD, TabArena, OpenML suites, Grinsztajn, TabZilla, Transformer Dissection, Performers, von Oswald, infinite attention",
+   "referenced_works of W1777124189 (SVGP) and W2617168490 (Streaming SGP): Titsias 2009, Quinonero-Candela 2005, Snelson 2005, Matthews 2016"
+  ],
+  "status_source": "reconstructed from 7 artifacts of the Tabular Dataset Compression project (2026-10-19 to 11-05)"
+ },
+ "config": {
+  "alpha": 0.75,
+  "hops": 2,
+  "k1": 6,
+  "k": 3,
+  "max_nodes": 90,
+  "min_sim": 0.03
+ },
+ "papers": [
+  {
+   "id": "W4302009014",
+   "title": "TabPFN: A Transformer That Solves Small Tabular Classification Problems in a Second",
+   "year": 2022,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2207.01848",
+   "url": "https://doi.org/10.48550/arxiv.2207.01848",
+   "cited_by": 284,
+   "abstract": "Presents TabPFN, a Transformer trained once on synthetic data that performs supervised classification on small tabular datasets in under a second without hyperparameter tuning, predicting through in-context learning in a single forward pass.",
+   "problem": "Fast, tuning-free supervised classification on small tabular datasets.",
+   "method": "A transformer prior-fitted network meta-trained on synthetic datasets predicts test labels in one forward pass with the whole training set in context.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "tabular-classification",
+    "in-context-learning",
+    "inference-efficiency"
+   ],
+   "method_tags": [
+    "prior-fitted-network",
+    "transformer",
+    "synthetic-prior",
+    "meta-learning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4406170795",
+   "title": "Accurate predictions on small data with a tabular foundation model",
+   "year": 2025,
+   "venue": "Nature",
+   "doi": "10.1038/s41586-024-08328-6",
+   "url": "https://doi.org/10.1038/s41586-024-08328-6",
+   "cited_by": 1119,
+   "abstract": "Presents TabPFN (v2), a foundation model for tabular data that outperforms prior methods on datasets with up to 10,000 samples while using much less training time. It also supports fine-tuning, data generation, density estimation, and reusable embeddings.",
+   "problem": "Accurate classification and regression on small-to-medium tabular datasets (up to ~10K samples) without per-dataset training.",
+   "method": "TabPFN v2: a two-way (row/column) attention transformer pretrained on millions of synthetic causal-prior datasets, predicting by in-context learning over the full training set.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "tabular-classification",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "prior-fitted-network",
+    "transformer",
+    "synthetic-prior",
+    "meta-learning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4416234289",
+   "title": "TabPFN-2.5: Advancing the State of the Art in Tabular Foundation Models",
+   "year": 2025,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2511.08667",
+   "url": "https://doi.org/10.48550/arxiv.2511.08667",
+   "cited_by": 47,
+   "abstract": "Introduces TabPFN-2.5, designed for datasets with up to 50,000 rows and 2,000 features, plus a distillation engine that converts the model into a compact MLP or tree ensemble for lower-latency deployment.",
+   "problem": "Extending tabular foundation models to larger tables (up to 50K rows, 2K features) while keeping deployment latency low.",
+   "method": "A scaled-up TabPFN pretrained on synthetic priors, plus a distillation engine that converts the in-context model into a compact MLP or tree ensemble.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "large-scale-data",
+    "inference-efficiency",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "prior-fitted-network",
+    "transformer",
+    "synthetic-prior",
+    "knowledge-distillation"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4407385137",
+   "title": "TabICL: A Tabular Foundation Model for In-Context Learning on Large Data",
+   "year": 2025,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2502.05564",
+   "url": "https://doi.org/10.48550/arxiv.2502.05564",
+   "cited_by": 34,
+   "abstract": "Introduces TabICL, a tabular classification foundation model pretrained on synthetic datasets that scales to 500K samples using a two-stage column-then-row attention architecture; it matches TabPFNv2 on 200 TALENT datasets while being up to 10 times faster.",
+   "problem": "Scaling in-context tabular classification to large training sets (up to 500K rows) at low inference cost.",
+   "method": "A synthetic-prior pretrained transformer with column-then-row attention that embeds rows first and then runs in-context learning over row embeddings.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "tabular-classification",
+    "in-context-learning",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "transformer",
+    "prior-fitted-network",
+    "synthetic-prior"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W7196931918",
+   "title": "TabDPT: Scaling Tabular Foundation Models on Real Data",
+   "year": 2025,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.52202/085713-5748",
+   "url": "https://doi.org/10.52202/085713-5748",
+   "cited_by": 23,
+   "abstract": "Introduces TabDPT, a tabular foundation model that combines in-context learning-based retrieval with self-supervised learning. Using real data during pre-training speeds up training and improves generalization, with performance scaling according to power laws.",
+   "problem": "Building tabular foundation models that scale with data and model size and generalize across real datasets.",
+   "method": "Pretrains an in-context transformer on real tabular data with self-supervised objectives and uses retrieval of nearest neighbours to build each query's context.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "in-context-learning",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "transformer",
+    "retrieval",
+    "self-supervised-learning",
+    "nearest-neighbors"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4389814434",
+   "title": "MotherNet: Fast Training and Inference via Hyper-Network Transformers",
+   "year": 2023,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2312.08598",
+   "url": "https://doi.org/10.48550/arxiv.2312.08598",
+   "cited_by": 5,
+   "abstract": "Presents MotherNet, a hypernetwork trained on synthetic classification tasks that generates the weights of a child neural network in a single forward pass, comparable to TabPFN and gradient boosting on small datasets.",
+   "problem": "Producing a fast, small classifier for a new tabular dataset without dataset-specific gradient descent, avoiding in-context inference cost at prediction time.",
+   "method": "A hypernetwork transformer meta-trained on synthetic tasks reads the training set once and outputs the weights of a child MLP.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "tabular-classification",
+    "inference-efficiency"
+   ],
+   "method_tags": [
+    "hypernetwork",
+    "transformer",
+    "synthetic-prior",
+    "meta-learning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4398795279",
+   "title": "Fine-tuned In-Context Learning Transformers are Excellent Tabular Data Classifiers",
+   "year": 2024,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2405.13396",
+   "url": "https://doi.org/10.48550/arxiv.2405.13396",
+   "cited_by": 4,
+   "abstract": "Extends TabPFN with fine-tuning and a forest-based synthetic dataset generator with complex decision boundaries; combined with TabPFN's prior this yields TabForestPFN, strong both zero-shot and after fine-tuning.",
+   "problem": "Improving in-context tabular classifiers on real datasets with complex decision boundaries.",
+   "method": "Fine-tunes TabPFN per dataset and adds a forest-based synthetic data generator to the prior, yielding TabForestPFN.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "tabular-classification",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "fine-tuning",
+    "synthetic-prior",
+    "prior-fitted-network",
+    "transformer"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W7197035240",
+   "title": "Mitra: Mixed Synthetic Priors for Enhancing Tabular Foundation Models",
+   "year": 2025,
+   "venue": "Neural Information Processing Systems",
+   "doi": "",
+   "url": "https://openalex.org/W7197035240",
+   "cited_by": 10,
+   "abstract": "Studies which properties of synthetic prior distributions help tabular foundation models generalize, and introduces Mitra, trained on a curated mix of priors, which outperforms TabPFNv2 and TabICL on classification and regression with better sample efficiency.",
+   "problem": "Understanding which synthetic pretraining priors make tabular foundation models generalize, for classification and regression.",
+   "method": "Curates a mixture of synthetic prior generators (e.g., SCM- and tree-based) by diversity and performance, and pretrains an in-context tabular model on it.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "tabular-classification",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "synthetic-prior",
+    "prior-fitted-network",
+    "transformer"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4226412614",
+   "title": "Transformers Can Do Bayesian Inference",
+   "year": 2021,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2112.10510",
+   "url": "https://doi.org/10.48550/arxiv.2112.10510",
+   "cited_by": 55,
+   "abstract": "Introduces Prior-Data Fitted Networks (PFNs), which use in-context learning on samples from a prior to approximate Bayesian posterior predictions in a single forward pass, near-perfectly mimicking Gaussian processes with large speedups.",
+   "problem": "Approximating Bayesian posterior predictive distributions (e.g., Gaussian processes) fast, without per-task inference.",
+   "method": "Prior-data fitted networks: a transformer trained on datasets sampled from a prior learns to output posterior predictions in-context in one forward pass.",
+   "problem_tags": [
+    "bayesian-inference",
+    "in-context-learning",
+    "inference-efficiency"
+   ],
+   "method_tags": [
+    "prior-fitted-network",
+    "transformer",
+    "meta-learning",
+    "gaussian-process"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4415796772",
+   "title": "TuneTables: Context Optimization for Scalable Prior-Data Fitted Networks",
+   "year": 2024,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.52202/079017-2654",
+   "url": "https://doi.org/10.52202/079017-2654",
+   "cited_by": 9,
+   "abstract": "Proposes TuneTables, a parameter-efficient fine-tuning method for PFNs that compresses large datasets into a smaller learned context, reaching the best average performance across 19 algorithms on 98 datasets while tuning under 5% of TabPFN's parameters.",
+   "problem": "Making TabPFN work on datasets far larger than its context limit by compressing the training set into a small context.",
+   "method": "Learns a small set of soft prompt tokens (a tuned context) by gradient descent through the frozen PFN, replacing the raw training rows.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "context-compression",
+    "large-scale-data",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "prompt-tuning",
+    "prior-fitted-network",
+    "fine-tuning",
+    "synthetic-sample-optimization"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4399115361",
+   "title": "Mixture of In-Context Prompters for Tabular PFNs",
+   "year": 2024,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2405.16156",
+   "url": "https://doi.org/10.48550/arxiv.2405.16156",
+   "cited_by": 3,
+   "abstract": "Presents MixturePFN, which extends nearest-neighbour sampling and bootstrapping to fine-tune TabPFN per inference dataset to address ICL's quadratic scaling, achieving the highest mean rank among top algorithms on 36 datasets.",
+   "problem": "Scaling TabPFN to large datasets despite the quadratic cost and fixed size of its context.",
+   "method": "MixturePFN routes each query to one of several cluster-specific prompters (contexts built by k-means/nearest-neighbour sampling) and fine-tunes TabPFN per cluster via bootstrapping.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "large-scale-data",
+    "context-compression",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "mixture-of-experts",
+    "k-means",
+    "nearest-neighbors",
+    "fine-tuning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4415795760",
+   "title": "Retrieval & Fine-Tuning for In-Context Tabular Models",
+   "year": 2024,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.52202/079017-3442",
+   "url": "https://doi.org/10.52202/079017-3442",
+   "cited_by": 14,
+   "abstract": "Proposes LoCalPFN, which adapts TabPFN by fine-tuning it on retrieved nearest neighbours of each query, achieving state-of-the-art results on 95 TabZilla/OpenML datasets, including against tuned tree-based models.",
+   "problem": "Scaling in-context tabular models to large and complex datasets where a single global context underfits.",
+   "method": "LoCalPFN retrieves each query's k nearest training rows as a local context and fine-tunes TabPFN end-to-end with these retrieved contexts.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "large-scale-data",
+    "in-context-learning",
+    "tabular-classification"
+   ],
+   "method_tags": [
+    "retrieval",
+    "nearest-neighbors",
+    "fine-tuning",
+    "prior-fitted-network"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4417095973",
+   "title": "TabFlex: Scaling Tabular Learning to Millions with Linear Attention",
+   "year": 2025,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2506.05584",
+   "url": "https://doi.org/10.48550/arxiv.2506.05584",
+   "cited_by": 2,
+   "abstract": "Proposes TabFlex, which replaces quadratic self-attention with linear attention to scale in-context tabular classification to many features, classes and samples, with large speedups over TabPFN and XGBoost.",
+   "problem": "Scaling in-context tabular classification to millions of samples and many features/classes.",
+   "method": "Replaces quadratic softmax self-attention in a TabPFN-style model with linear attention so cost grows linearly in context size.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "large-scale-data",
+    "inference-efficiency",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "linear-attention",
+    "transformer",
+    "prior-fitted-network"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4391800700",
+   "title": "In-Context Data Distillation with TabPFN",
+   "year": 2024,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2402.06971",
+   "url": "https://doi.org/10.48550/arxiv.2402.06971",
+   "cited_by": 6,
+   "abstract": "Introduces in-context distillation (ICD) to overcome TabPFN's data-size limits, letting it handle larger datasets under a fixed memory budget, with strong results on 48 large OpenML datasets.",
+   "problem": "Letting TabPFN use large training sets under a fixed context/memory budget.",
+   "method": "Optimizes a small synthetic context (distilled inputs and labels) by gradient descent through frozen TabPFN to maximize likelihood of the full training data.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "context-compression",
+    "dataset-distillation",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "synthetic-sample-optimization",
+    "prior-fitted-network",
+    "prompt-tuning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4388844284",
+   "title": "Scaling TabPFN: Sketching and Feature Selection for Tabular Prior-Data Fitted Networks",
+   "year": 2023,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2311.10609",
+   "url": "https://doi.org/10.48550/arxiv.2311.10609",
+   "cited_by": 4,
+   "abstract": "Studies how best to summarize labelled training samples before feeding them to a pre-trained PFN, investigating sketching and feature-selection methods with TabPFN.",
+   "problem": "Choosing which training rows and features to place in TabPFN's limited context for larger datasets.",
+   "method": "Empirically compares sketching (random subsampling, k-means centroids, coresets) and feature-selection strategies for summarizing the context.",
+   "problem_tags": [
+    "tabular-foundation-models",
+    "context-compression",
+    "data-summarization",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "subsampling",
+    "k-means",
+    "feature-selection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4385328212",
+   "title": "TabR: Tabular Deep Learning Meets Nearest Neighbors in 2023",
+   "year": 2023,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2307.14338",
+   "url": "https://doi.org/10.48550/arxiv.2307.14338",
+   "cited_by": 21,
+   "abstract": "Presents TabR, a retrieval-augmented tabular deep learning model combining a feed-forward network with a kNN-like attention component, the best average deep model on public benchmarks.",
+   "problem": "Improving deep tabular models so they rival gradient-boosted trees.",
+   "method": "A feed-forward network augmented with a kNN-style attention retrieval module over training rows (labels and representations of neighbours).",
+   "problem_tags": [
+    "tabular-classification",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "retrieval",
+    "nearest-neighbors",
+    "attention-kernel-smoother",
+    "kernel-methods"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2902287157",
+   "title": "Dataset Distillation",
+   "year": 2018,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1811.10959",
+   "url": "https://doi.org/10.48550/arxiv.1811.10959",
+   "cited_by": 336,
+   "abstract": "Proposes dataset distillation: synthesizing a small set of artificial data points so that a model trained on them approximates one trained on the original data (e.g., 10 distilled MNIST images).",
+   "problem": "Compressing a large training set into a handful of synthetic examples that train a model to near-full accuracy.",
+   "method": "Bilevel optimization: learns synthetic images (and learning rates) by backpropagating through a few inner gradient steps of model training.",
+   "problem_tags": [
+    "dataset-distillation",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "synthetic-sample-optimization",
+    "bilevel-optimization",
+    "meta-learning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W3034486793",
+   "title": "Dataset Condensation with Gradient Matching",
+   "year": 2020,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2006.05929",
+   "url": "https://doi.org/10.48550/arxiv.2006.05929",
+   "cited_by": 234,
+   "abstract": "Presents Dataset Condensation, which learns to compress a large dataset into a small set of synthetic samples by matching training gradients, with gains in continual learning and architecture search under limited memory.",
+   "problem": "Condensing a large dataset into a small synthetic set for training under memory/compute limits, including continual learning.",
+   "method": "Learns synthetic samples so that network gradients on them match gradients on real data across training.",
+   "problem_tags": [
+    "dataset-distillation",
+    "data-summarization",
+    "continual-learning"
+   ],
+   "method_tags": [
+    "gradient-matching",
+    "synthetic-sample-optimization",
+    "bilevel-optimization"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4319300193",
+   "title": "Dataset Condensation with Distribution Matching",
+   "year": 2023,
+   "venue": "IEEE Winter Conference on Applications of Computer Vision",
+   "doi": "10.1109/wacv56688.2023.00645",
+   "url": "https://doi.org/10.1109/wacv56688.2023.00645",
+   "cited_by": 267,
+   "abstract": "Proposes dataset condensation by matching feature distributions of synthetic and real images in embedding spaces, cutting synthesis cost while keeping comparable or better accuracy, with benefits for continual learning and architecture search.",
+   "problem": "Cheap dataset condensation that scales to larger datasets and architectures.",
+   "method": "Synthesizes samples whose feature-embedding distribution matches the real data (maximum mean discrepancy in randomly sampled embedding spaces), avoiding bilevel optimization.",
+   "problem_tags": [
+    "dataset-distillation",
+    "data-summarization",
+    "continual-learning"
+   ],
+   "method_tags": [
+    "distribution-matching",
+    "kernel-methods",
+    "synthetic-sample-optimization"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W3097629404",
+   "title": "Dataset Meta-Learning from Kernel Ridge-Regression",
+   "year": 2020,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2011.00050",
+   "url": "https://doi.org/10.48550/arxiv.2011.00050",
+   "cited_by": 102,
+   "abstract": "Introduces Kernel Inducing Points (KIP), a meta-learning method that compresses datasets by one to two orders of magnitude using the link between infinitely wide networks and kernel ridge regression.",
+   "problem": "Compressing datasets by one to two orders of magnitude while preserving model performance.",
+   "method": "Kernel Inducing Points (KIP): learns a small support set (inputs and labels) so that kernel ridge regression with an NTK on it fits the full data.",
+   "problem_tags": [
+    "dataset-distillation",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "kernel-methods",
+    "pseudo-points",
+    "soft-labels",
+    "meta-learning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2774918944",
+   "title": "Active Learning for Convolutional Neural Networks: A Core-Set Approach",
+   "year": 2017,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1708.00489",
+   "url": "https://doi.org/10.48550/arxiv.1708.00489",
+   "cited_by": 1226,
+   "abstract": "Frames batch active learning for CNNs as core-set selection, gives a theoretical bound on subset performance (k-center), and significantly outperforms existing approaches on image classification.",
+   "problem": "Selecting a small labelled subset of a large pool that trains a CNN almost as well as the full data (batch active learning).",
+   "method": "Casts selection as core-set selection and solves the k-center problem greedily in feature space, with a covering-radius bound.",
+   "problem_tags": [
+    "coreset-selection",
+    "active-learning",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "k-center",
+    "greedy-selection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2963740311",
+   "title": "Super-Samples from Kernel Herding",
+   "year": 2012,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1203.3472",
+   "url": "https://doi.org/10.48550/arxiv.1203.3472",
+   "cited_by": 194,
+   "abstract": "Extends herding to continuous spaces via the kernel trick, giving a deterministic sampler whose error in expectations decreases at O(1/T) versus O(1/sqrt(T)) for i.i.d. samples, illustrated on Bayesian predictive distributions.",
+   "problem": "Approximating a distribution with few representative samples, faster than i.i.d. sampling, e.g. for Bayesian predictive distributions.",
+   "method": "Kernel herding: deterministically picks points that greedily match the kernel mean embedding of the target distribution.",
+   "problem_tags": [
+    "data-summarization",
+    "coreset-selection"
+   ],
+   "method_tags": [
+    "kernel-herding",
+    "distribution-matching",
+    "kernel-methods",
+    "greedy-selection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2612467436",
+   "title": "Practical Coreset Constructions for Machine Learning",
+   "year": 2017,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1703.06476",
+   "url": "https://doi.org/10.48550/arxiv.1703.06476",
+   "cited_by": 142,
+   "abstract": "Surveys coresets, small summaries of large datasets whose solutions are provably competitive with full-data solutions, presenting a construction framework for k-means and summarizing coreset algorithms for mixtures, PCA, regression and ERM.",
+   "problem": "Summarizing large datasets with small weighted subsets whose model solutions are provably close to full-data solutions.",
+   "method": "Survey and framework for importance-sampling (sensitivity-based) coreset constructions for k-means, mixtures, PCA, regression and ERM.",
+   "problem_tags": [
+    "coreset-selection",
+    "data-summarization",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "importance-sampling",
+    "k-means",
+    "survey"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W7133230676",
+   "title": "Beyond Neural Scaling Laws: Beating Power Law Scaling Via Data Pruning",
+   "year": 2022,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.52202/068431-1419",
+   "url": "https://doi.org/10.52202/068431-1419",
+   "cited_by": 162,
+   "abstract": "Argues data pruning can beat power-law neural scaling given good pruning metrics; benchmarks ten pruning metrics on ImageNet and proposes a cheap self-supervised metric comparable to supervised ones.",
+   "problem": "Reducing training-set size without losing accuracy, so error scales better than a power law in data size.",
+   "method": "Ranks examples by pruning metrics (including a self-supervised prototype-distance metric) and keeps a subset; benchmarks ten metrics on ImageNet.",
+   "problem_tags": [
+    "coreset-selection",
+    "data-summarization",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "example-scoring",
+    "k-means",
+    "empirical-evaluation"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2099768828",
+   "title": "Sparse Gaussian Processes using Pseudo-inputs",
+   "year": 2005,
+   "venue": "Neural Information Processing Systems",
+   "doi": "",
+   "url": "https://openalex.org/W2099768828",
+   "cited_by": 1415,
+   "abstract": "Proposes a sparse GP regression model whose covariance is parameterized by M pseudo-input locations learned by gradient optimization, with O(M^2 N) training and O(M^2) prediction cost, matching full GP accuracy with small M.",
+   "problem": "Making Gaussian process regression tractable for large datasets.",
+   "method": "SPGP/FITC: places M pseudo-inputs whose locations are optimized by gradient on the marginal likelihood, giving O(M^2 N) training cost.",
+   "problem_tags": [
+    "scalable-gaussian-processes",
+    "large-scale-data",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "pseudo-points",
+    "gaussian-process",
+    "kernel-methods"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W137285897",
+   "title": "Variational Learning of Inducing Variables in Sparse Gaussian Processes",
+   "year": 2009,
+   "venue": "AISTATS",
+   "doi": "",
+   "url": "https://openalex.org/W137285897",
+   "cited_by": 1121,
+   "abstract": "Introduces a variational method for sparse GPs that jointly selects inducing inputs and hyperparameters by maximizing a lower bound on the log marginal likelihood, i.e., minimizing the KL divergence to the exact posterior.",
+   "problem": "Sparse GP approximation that selects inducing inputs and hyperparameters without overfitting.",
+   "method": "Variational free energy: maximizes a lower bound on the marginal likelihood, equivalently minimizing KL to the exact posterior over inducing variables.",
+   "problem_tags": [
+    "scalable-gaussian-processes",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "pseudo-points",
+    "variational-inference",
+    "gaussian-process",
+    "kl-projection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W1777124189",
+   "title": "Gaussian Processes for Big Data",
+   "year": 2013,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1309.6835",
+   "url": "https://doi.org/10.48550/arxiv.1309.6835",
+   "cited_by": 713,
+   "abstract": "Presents stochastic variational inference for GPs around globally relevant inducing variables, scaling GP models to millions of points and extending to non-Gaussian likelihoods.",
+   "problem": "Scaling Gaussian process models to millions of data points.",
+   "method": "SVGP: stochastic variational inference over an explicit inducing-variable distribution, enabling mini-batch training.",
+   "problem_tags": [
+    "scalable-gaussian-processes",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "pseudo-points",
+    "variational-inference",
+    "gaussian-process"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2617168490",
+   "title": "Streaming Sparse Gaussian Process Approximations",
+   "year": 2017,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.17863/cam.21293",
+   "url": "https://doi.org/10.17863/cam.21293",
+   "cited_by": 74,
+   "abstract": "Develops a framework for sparse pseudo-point GP models on streaming data, updating posterior and hyperparameters online without revisiting old data, avoiding heuristic or forgetting-prone prior streaming approaches.",
+   "problem": "Updating a sparse GP posterior and hyperparameters online as data arrive in batches, without revisiting old data.",
+   "method": "Projects the previous approximate posterior plus the new batch onto a new set of pseudo-points by minimizing a KL divergence (variational or power-EP).",
+   "problem_tags": [
+    "streaming-data",
+    "scalable-gaussian-processes",
+    "data-summarization",
+    "continual-learning"
+   ],
+   "method_tags": [
+    "streaming-sparse-gaussian-process",
+    "gaussian-process",
+    "pseudo-points",
+    "kl-projection",
+    "variational-inference"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2129564505",
+   "title": "Sparse On-Line Gaussian Processes",
+   "year": 2002,
+   "venue": "Neural Computation",
+   "doi": "10.1162/089976602317250933",
+   "url": "https://doi.org/10.1162/089976602317250933",
+   "cited_by": 748,
+   "abstract": "Develops a sparse online algorithm for GP models that sequentially builds a small relevant subsample (basis vectors) of a large data set while propagating predictions and error measures.",
+   "problem": "Learning GP models online from large data streams with bounded memory.",
+   "method": "Sequential assumed-density-filtering updates that keep a small set of basis vectors, replacing points by KL-based projection when the budget is reached.",
+   "problem_tags": [
+    "streaming-data",
+    "scalable-gaussian-processes",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "streaming-sparse-gaussian-process",
+    "gaussian-process",
+    "pseudo-points",
+    "kl-projection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2763914732",
+   "title": "A Unifying Framework for Gaussian Process Pseudo-Point Approximations using Power Expectation Propagation",
+   "year": 2016,
+   "venue": "arXiv",
+   "doi": "10.17863/cam.20846",
+   "url": "https://doi.org/10.17863/cam.20846",
+   "cited_by": 102,
+   "abstract": "Presents a Power Expectation Propagation framework that unifies many GP pseudo-point approximations (including FITC and VFE) and outperforms current approaches on regression and classification.",
+   "problem": "Understanding and improving the family of pseudo-point sparse GP approximations for regression and classification.",
+   "method": "Power expectation propagation over pseudo-points, recovering FITC (alpha=1) and VFE (alpha->0) as special cases.",
+   "problem_tags": [
+    "scalable-gaussian-processes",
+    "bayesian-inference"
+   ],
+   "method_tags": [
+    "pseudo-points",
+    "expectation-propagation",
+    "variational-inference",
+    "gaussian-process"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W215707797",
+   "title": "On Sparse Variational Methods and the Kullback-Leibler Divergence between Stochastic Processes",
+   "year": 2015,
+   "venue": "arXiv",
+   "doi": "",
+   "url": "https://openalex.org/W215707797",
+   "cited_by": 106,
+   "abstract": "Interprets variational inducing-variable methods as minimizing a KL divergence between approximate and true posterior processes, generalizing to infinite index sets and identifying an extra condition beyond marginal consistency.",
+   "problem": "Clarifying what objective sparse variational GP methods optimize, including infinite index sets and augmented models.",
+   "method": "Shows inducing-point variational inference minimizes a KL divergence between full approximate and posterior stochastic processes.",
+   "problem_tags": [
+    "scalable-gaussian-processes",
+    "bayesian-inference"
+   ],
+   "method_tags": [
+    "kl-projection",
+    "variational-inference",
+    "pseudo-points",
+    "theoretical-analysis"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W1571870753",
+   "title": "A Unifying View of Sparse Approximate Gaussian Process Regression",
+   "year": 2005,
+   "venue": "Journal of Machine Learning Research",
+   "doi": "",
+   "url": "https://openalex.org/W1571870753",
+   "cited_by": 1700,
+   "abstract": "Offers a unifying view of probabilistic sparse approximations for GP regression based on the effective prior each method uses, ranking how closely they match the full GP and suggesting better approximations.",
+   "problem": "Comparing and organizing sparse approximations for GP regression on large datasets.",
+   "method": "Expresses sparse methods (SoR, DTC, FITC, PITC) as exact inference under modified effective priors defined through inducing variables.",
+   "problem_tags": [
+    "scalable-gaussian-processes",
+    "large-scale-data"
+   ],
+   "method_tags": [
+    "pseudo-points",
+    "gaussian-process",
+    "survey"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2912515466",
+   "title": "Functional Regularisation for Continual Learning with Gaussian Processes",
+   "year": 2019,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1901.11356",
+   "url": "https://doi.org/10.48550/arxiv.1901.11356",
+   "cited_by": 113,
+   "abstract": "Proposes functional-space continual learning with a GP built from a network's last layer, using inducing points to summarize previous tasks and KL-based regularization.",
+   "problem": "Continual learning across a sequence of tasks without catastrophic forgetting and with a small memory.",
+   "method": "Treats the network's last layer as a GP, summarizes each past task with inducing points, and regularizes new tasks with a KL term in function space.",
+   "problem_tags": [
+    "continual-learning",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "gaussian-process",
+    "pseudo-points",
+    "variational-inference",
+    "kl-projection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2119885577",
+   "title": "Random sampling with a reservoir",
+   "year": 1985,
+   "venue": "ACM Transactions on Mathematical Software",
+   "doi": "10.1145/3147.3165",
+   "url": "https://doi.org/10.1145/3147.3165",
+   "cited_by": 1741,
+   "abstract": "Introduces fast one-pass algorithms (notably Algorithm Z) for drawing a uniform random sample of n records without replacement from a stream of unknown length N using constant space.",
+   "problem": "Maintaining a uniform random sample of fixed size from a stream of unknown length in one pass.",
+   "method": "Reservoir sampling (Algorithms R, X, Z) with skip-length generation, using constant space.",
+   "problem_tags": [
+    "streaming-data",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "reservoir-sampling",
+    "experience-replay",
+    "subsampling"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W3097784654",
+   "title": "GDumb: A Simple Approach that Questions Our Progress in Continual Learning",
+   "year": 2020,
+   "venue": "European Conference on Computer Vision (LNCS)",
+   "doi": "10.1007/978-3-030-58536-5_31",
+   "url": "https://doi.org/10.1007/978-3-030-58536-5_31",
+   "cited_by": 497,
+   "abstract": "",
+   "problem": "Questioning whether continual learning methods beat a trivial memory-only baseline under various settings.",
+   "method": "Greedily stores a class-balanced memory from the stream and trains a model from scratch on the memory only at inference time.",
+   "problem_tags": [
+    "continual-learning",
+    "replay-buffer",
+    "class-imbalance"
+   ],
+   "method_tags": [
+    "class-balanced-sampling",
+    "greedy-selection",
+    "experience-replay"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W3168149265",
+   "title": "Rainbow Memory: Continual Learning with a Memory of Diverse Samples",
+   "year": 2021,
+   "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+   "doi": "10.1109/cvpr46437.2021.00812",
+   "url": "https://doi.org/10.1109/cvpr46437.2021.00812",
+   "cited_by": 376,
+   "abstract": "Proposes Rainbow Memory for continual learning with blurry task boundaries, selecting diverse stored samples using per-sample classification uncertainty and data augmentation.",
+   "problem": "Continual learning with blurry task boundaries where classes are shared across tasks and memory is limited.",
+   "method": "Selects diverse buffer samples by per-sample uncertainty under augmentations, keeps class-balanced memory, and adds data augmentation during replay.",
+   "problem_tags": [
+    "continual-learning",
+    "replay-buffer"
+   ],
+   "method_tags": [
+    "experience-replay",
+    "example-scoring",
+    "class-balanced-sampling"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2952571470",
+   "title": "Gradient based sample selection for online continual learning",
+   "year": 2019,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.48550/arxiv.1903.08671",
+   "url": "https://doi.org/10.48550/arxiv.1903.08671",
+   "cited_by": 418,
+   "abstract": "Frames replay-buffer sample selection for online continual learning as constrained optimization equivalent to maximizing gradient diversity, and proposes a cheap greedy alternative that beats other selection methods.",
+   "problem": "Choosing which stream samples to keep in a fixed replay buffer for online continual learning without task boundaries.",
+   "method": "Formulates buffer selection as maximizing gradient diversity (constrained optimization) and proposes a cheap greedy approximation.",
+   "problem_tags": [
+    "continual-learning",
+    "replay-buffer",
+    "streaming-data"
+   ],
+   "method_tags": [
+    "greedy-selection",
+    "experience-replay",
+    "gradient-matching"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W3035471260",
+   "title": "Online Continual Learning from Imbalanced Data",
+   "year": 2020,
+   "venue": "International Conference on Machine Learning",
+   "doi": "",
+   "url": "https://openalex.org/W3035471260",
+   "cited_by": 93,
+   "abstract": "",
+   "problem": "Online continual learning from class-imbalanced streams with a small memory.",
+   "method": "Class-Balancing Reservoir Sampling (CBRS): reservoir-style memory updates that evict from the currently largest class to keep the buffer class-balanced.",
+   "problem_tags": [
+    "continual-learning",
+    "class-imbalance",
+    "replay-buffer",
+    "streaming-data"
+   ],
+   "method_tags": [
+    "reservoir-sampling",
+    "experience-replay",
+    "class-balanced-sampling"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2947461406",
+   "title": "On Tiny Episodic Memories in Continual Learning",
+   "year": 2019,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1902.10486",
+   "url": "https://doi.org/10.48550/arxiv.1902.10486",
+   "cited_by": 506,
+   "abstract": "Finds that jointly training on the current task and a tiny episodic memory of past examples (experience replay) outperforms specialized continual learning methods.",
+   "problem": "Learning a stream of tasks while transferring knowledge and avoiding forgetting, with very small memory.",
+   "method": "Experience replay: jointly trains on the current batch and a tiny episodic memory filled by reservoir sampling or ring buffers.",
+   "problem_tags": [
+    "continual-learning",
+    "replay-buffer"
+   ],
+   "method_tags": [
+    "experience-replay",
+    "reservoir-sampling",
+    "sliding-window"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2554863749",
+   "title": "iCaRL: Incremental Classifier and Representation Learning",
+   "year": 2017,
+   "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+   "doi": "10.1109/cvpr.2017.587",
+   "url": "https://doi.org/10.1109/cvpr.2017.587",
+   "cited_by": 4003,
+   "abstract": "Introduces iCaRL for class-incremental learning, where classes arrive progressively and a small exemplar memory is kept, outperforming fixed-representation approaches on CIFAR-100 and ImageNet.",
+   "problem": "Class-incremental learning where new classes arrive over time and only a bounded exemplar memory is allowed.",
+   "method": "Selects class exemplars by herding toward the class mean in feature space, classifies by nearest-mean-of-exemplars, and trains with distillation.",
+   "problem_tags": [
+    "continual-learning",
+    "replay-buffer",
+    "data-summarization"
+   ],
+   "method_tags": [
+    "kernel-herding",
+    "greedy-selection",
+    "knowledge-distillation",
+    "experience-replay"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2099419573",
+   "title": "A survey on concept drift adaptation",
+   "year": 2014,
+   "venue": "ACM Computing Surveys",
+   "doi": "10.1145/2523813",
+   "url": "https://doi.org/10.1145/2523813",
+   "cited_by": 3958,
+   "abstract": "Surveys concept drift in online supervised learning, where the input-target relationship changes over time, categorizing adaptation strategies, techniques and evaluation methods.",
+   "problem": "Learning from data streams whose input-target relationship changes over time.",
+   "method": "Survey and taxonomy of adaptation strategies (memory/windowing, change detection, learning and loss estimation) and evaluation methods.",
+   "problem_tags": [
+    "concept-drift",
+    "streaming-data"
+   ],
+   "method_tags": [
+    "survey",
+    "sliding-window"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4414844648",
+   "title": "In-context Learning of Evolving Data Streams with Tabular Foundational Models",
+   "year": 2026,
+   "venue": "ACM SIGKDD Conference on Knowledge Discovery and Data Mining",
+   "doi": "10.1145/3770854.3780305",
+   "url": "https://doi.org/10.1145/3770854.3780305",
+   "cited_by": 3,
+   "abstract": "Applies TabPFN to data stream mining with a simple sliding-memory strategy, reporting consistent gains over Hoeffding-tree methods such as Adaptive Random Forest and Streaming Patches on non-stationary benchmarks.",
+   "problem": "Classifying non-stationary tabular data streams with a tabular foundation model instead of incremental tree learners.",
+   "method": "Feeds TabPFN a sliding/bounded memory of recent stream examples as its in-context set and predicts without retraining.",
+   "problem_tags": [
+    "streaming-data",
+    "concept-drift",
+    "tabular-foundation-models",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "sliding-window",
+    "prior-fitted-network",
+    "transformer"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4415796422",
+   "title": "Drift-Resilient TabPFN: In-Context Learning Temporal Distribution Shifts on Tabular Data",
+   "year": 2024,
+   "venue": "Neural Information Processing Systems",
+   "doi": "",
+   "url": "https://openalex.org/W4415796422",
+   "cited_by": 16,
+   "abstract": "Introduces Drift-Resilient TabPFN, an in-context learning approach for tabular data under temporal distribution shifts, improving accuracy, ROC AUC and calibration over the strongest baselines.",
+   "problem": "Tabular prediction under temporal distribution shift, where training and test data come from different times.",
+   "method": "Pretrains a TabPFN on a prior of shifting structural causal models so the in-context learner adapts to temporal drift.",
+   "problem_tags": [
+    "concept-drift",
+    "streaming-data",
+    "tabular-foundation-models",
+    "in-context-learning",
+    "tabular-classification"
+   ],
+   "method_tags": [
+    "prior-fitted-network",
+    "synthetic-prior",
+    "transformer"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W7133221612",
+   "title": "Learning to Compress Prompts with Gist Tokens",
+   "year": 2023,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.52202/075280-0848",
+   "url": "https://doi.org/10.52202/075280-0848",
+   "cited_by": 70,
+   "abstract": "Presents gisting, which trains a language model to compress prompts into a few cacheable \"gist\" tokens, giving up to 26x prompt compression and FLOP savings with minimal quality loss.",
+   "problem": "Reducing the cost of repeatedly encoding long prompts in LLMs.",
+   "method": "Trains the LM with modified attention masks to compress a prompt into a few cacheable gist tokens.",
+   "problem_tags": [
+    "context-compression",
+    "llm-prompts",
+    "inference-efficiency"
+   ],
+   "method_tags": [
+    "transformer",
+    "prompt-tuning",
+    "meta-learning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4384392961",
+   "title": "In-context Autoencoder for Context Compression in a Large Language Model",
+   "year": 2023,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2307.06945",
+   "url": "https://doi.org/10.48550/arxiv.2307.06945",
+   "cited_by": 65,
+   "abstract": "Proposes the In-context Autoencoder (ICAE), which uses an LLM to compress long contexts into short memory slots via autoencoding and language-model pretraining, giving about 4x context compression.",
+   "problem": "Compressing long LLM contexts into a short representation to cut latency and memory.",
+   "method": "An LLM-based encoder (LoRA) maps context into memory slots, pretrained with autoencoding and LM objectives and then instruction fine-tuned.",
+   "problem_tags": [
+    "context-compression",
+    "llm-prompts",
+    "inference-efficiency"
+   ],
+   "method_tags": [
+    "autoencoder",
+    "transformer",
+    "fine-tuning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4389524473",
+   "title": "Adapting Language Models to Compress Contexts",
+   "year": 2023,
+   "venue": "Conference on Empirical Methods in Natural Language Processing",
+   "doi": "10.18653/v1/2023.emnlp-main.232",
+   "url": "https://doi.org/10.18653/v1/2023.emnlp-main.232",
+   "cited_by": 96,
+   "abstract": "Introduces AutoCompressors, which adapt pre-trained LMs to compress long contexts into summary vectors used as soft prompts, improving perplexity and in-context learning accuracy while cutting inference cost.",
+   "problem": "Extending LMs to long contexts cheaply by compressing earlier context.",
+   "method": "AutoCompressors recursively compress document segments into summary vectors passed forward as soft prompts.",
+   "problem_tags": [
+    "context-compression",
+    "llm-prompts",
+    "inference-efficiency",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "prompt-tuning",
+    "transformer",
+    "fine-tuning"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4389519226",
+   "title": "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models",
+   "year": 2023,
+   "venue": "Conference on Empirical Methods in Natural Language Processing",
+   "doi": "10.18653/v1/2023.emnlp-main.825",
+   "url": "https://doi.org/10.18653/v1/2023.emnlp-main.825",
+   "cited_by": 240,
+   "abstract": "Presents LLMLingua, a coarse-to-fine prompt compression method with a budget controller and iterative token-level compression, reaching up to 20x compression with little performance loss.",
+   "problem": "Shortening long LLM prompts (e.g., many in-context demonstrations) under a token budget while keeping accuracy.",
+   "method": "Coarse-to-fine compression: a budget controller selects demonstrations, then a small LM iteratively drops low-perplexity tokens, with distribution alignment.",
+   "problem_tags": [
+    "context-compression",
+    "llm-prompts",
+    "inference-efficiency",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "token-pruning",
+    "greedy-selection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4389523718",
+   "title": "Compressing Context to Enhance Inference Efficiency of Large Language Models",
+   "year": 2023,
+   "venue": "Conference on Empirical Methods in Natural Language Processing",
+   "doi": "10.18653/v1/2023.emnlp-main.391",
+   "url": "https://doi.org/10.18653/v1/2023.emnlp-main.391",
+   "cited_by": 123,
+   "abstract": "Proposes Selective Context, which prunes redundant (low self-information) input content to make LLM inference cheaper and faster with only minor quality drops.",
+   "problem": "Reducing LLM inference cost and memory on long inputs.",
+   "method": "Selective Context prunes lexical units with low self-information computed by a small LM.",
+   "problem_tags": [
+    "context-compression",
+    "llm-prompts",
+    "inference-efficiency"
+   ],
+   "method_tags": [
+    "token-pruning",
+    "greedy-selection"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4400142077",
+   "title": "TabReD: Analyzing Pitfalls and Filling the Gaps in Tabular Deep Learning Benchmarks",
+   "year": 2024,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2406.19380",
+   "url": "https://doi.org/10.48550/arxiv.2406.19380",
+   "cited_by": 15,
+   "abstract": "Presents TabReD, eight industry-grade tabular datasets with temporal distribution shift and heavy feature engineering, showing that model rankings differ from random-split benchmarks.",
+   "problem": "Evaluating tabular models under realistic industrial conditions with temporal shift.",
+   "method": "Curates eight industry-grade datasets with time-based splits and compares tabular deep learning and GBDT methods.",
+   "problem_tags": [
+    "benchmark",
+    "tabular-classification",
+    "concept-drift",
+    "streaming-data"
+   ],
+   "method_tags": [
+    "empirical-evaluation"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4414987631",
+   "title": "TabArena: A Living Benchmark for Machine Learning on Tabular Data",
+   "year": 2025,
+   "venue": "Neural Information Processing Systems",
+   "doi": "10.52202/085713-0519",
+   "url": "https://doi.org/10.52202/085713-0519",
+   "cited_by": 28,
+   "abstract": "Introduces TabArena, a continuously maintained benchmarking system for tabular machine learning, finding that ensembling and validation choices strongly affect rankings.",
+   "problem": "Reliable, continuously updated comparison of tabular ML methods including foundation models.",
+   "method": "A living benchmark with curated datasets, standardized tuning/ensembling protocols and a public leaderboard.",
+   "problem_tags": [
+    "benchmark",
+    "tabular-classification",
+    "tabular-foundation-models"
+   ],
+   "method_tags": [
+    "empirical-evaluation"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2976734616",
+   "title": "OpenML Benchmarking Suites",
+   "year": 2017,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.1708.03731",
+   "url": "https://doi.org/10.48550/arxiv.1708.03731",
+   "cited_by": 97,
+   "abstract": "Argues for curated, reproducible benchmark suites, describes OpenML tooling for creating them, and presents the OpenML-CC18 classification suite.",
+   "problem": "Reproducible, curated benchmarking of machine learning algorithms.",
+   "method": "OpenML tooling for benchmark suites and the curated OpenML-CC18 classification suite.",
+   "problem_tags": [
+    "benchmark",
+    "tabular-classification"
+   ],
+   "method_tags": [
+    "empirical-evaluation"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4286231567",
+   "title": "Why do tree-based models still outperform deep learning on tabular data?",
+   "year": 2022,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2207.08815",
+   "url": "https://doi.org/10.48550/arxiv.2207.08815",
+   "cited_by": 582,
+   "abstract": "Benchmarks deep learning against tree-based models on many medium-sized (about 10K samples) tabular datasets, finding trees remain state of the art and identifying inductive biases for tabular neural networks.",
+   "problem": "Understanding why deep models lag tree ensembles on medium-sized tabular data.",
+   "method": "Large benchmark with extensive hyperparameter search plus controlled experiments on inductive biases (irregular functions, uninformative features, rotation invariance).",
+   "problem_tags": [
+    "benchmark",
+    "tabular-classification"
+   ],
+   "method_tags": [
+    "empirical-evaluation"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W2970100546",
+   "title": "Transformer Dissection: An Unified Understanding for Transformer's Attention via the Lens of Kernel",
+   "year": 2019,
+   "venue": "Conference on Empirical Methods in Natural Language Processing",
+   "doi": "10.18653/v1/d19-1443",
+   "url": "https://doi.org/10.18653/v1/d19-1443",
+   "cited_by": 182,
+   "abstract": "",
+   "problem": "Understanding and redesigning transformer attention.",
+   "method": "Formulates attention as a kernel smoother over input elements and studies kernel and positional-embedding choices.",
+   "problem_tags": [
+    "attention-theory"
+   ],
+   "method_tags": [
+    "attention-kernel-smoother",
+    "kernel-methods",
+    "transformer"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W4311726128",
+   "title": "Transformers learn in-context by gradient descent",
+   "year": 2022,
+   "venue": "arXiv",
+   "doi": "10.48550/arxiv.2212.07677",
+   "url": "https://doi.org/10.48550/arxiv.2212.07677",
+   "cited_by": 105,
+   "abstract": "Shows that linear self-attention can implement gradient-descent regression and that trained Transformers can become mesa-optimizers that learn by gradient descent in their forward pass.",
+   "problem": "Explaining how transformers perform in-context learning.",
+   "method": "Shows that a linear self-attention layer can implement one gradient-descent step on a regression loss over the context and that trained transformers do so.",
+   "problem_tags": [
+    "attention-theory",
+    "in-context-learning"
+   ],
+   "method_tags": [
+    "transformer",
+    "meta-learning",
+    "theoretical-analysis"
+   ],
+   "verified": true,
+   "origin": "collected"
+  },
+  {
+   "id": "W3034979923",
+   "title": "Infinite attention: NNGP and NTK for deep attention networks",
+   "year": 2020,
+   "venue": "International Conference on Machine Learning",
+   "doi": "10.48550/arxiv.2006.10540",
+   "url": "https://doi.org/10.48550/arxiv.2006.10540",
+   "cited_by": 42,
+   "abstract": "Extends the wide-network/Gaussian-process equivalence to attention layers, showing multi-head attention behaves like a GP as the number of heads grows, with NNGP/NTK kernels for attention.",
+   "problem": "Characterizing attention networks in the infinite-width limit.",
+   "method": "Derives NNGP and NTK kernels for multi-head attention, showing it becomes a Gaussian process as the number of heads grows.",
+   "problem_tags": [
+    "attention-theory",
+    "bayesian-inference"
+   ],
+   "method_tags": [
+    "gaussian-process",
+    "kernel-methods",
+    "transformer",
+    "theoretical-analysis"
+   ],
+   "verified": true,
+   "origin": "collected"
+  }
+ ],
+ "hierarchy": {
+  "problem": {
+   "concept-drift": [
+    "concept-drift",
+    "streaming-data"
+   ]
+  },
+  "method": {
+   "streaming-sparse-gaussian-process": [
+    "streaming-sparse-gaussian-process",
+    "gaussian-process"
+   ],
+   "attention-kernel-smoother": [
+    "attention-kernel-smoother",
+    "kernel-methods"
+   ],
+   "reservoir-sampling": [
+    "reservoir-sampling",
+    "experience-replay"
+   ]
+  }
+ },
+ "nodes": [
+  {
+   "id": "s0",
+   "parent": null,
+   "move": null,
+   "research": {
+    "title": "SSC: context compression for TabPFN on streams",
+    "problem": "Tabular foundation models (TabPFN v3, TabICL) predict by putting the whole training set in context, so inference cost grows with the data. The project compresses that in-context training set to a tiny budget (0.1-8% of the pool earlier, now 1%) while keeping test accuracy, and counts selection or compression time inside the cost. The newest setting is a stream: data arrive in 10% chunks, and the summary must be updated without keeping the raw history, as C_t = compress(C_(t-1) ∪ D_t). Runs so far cover a stationary (iid) stream on 4 TabArena binary datasets with 30k-50k rows, and earlier time-ordered TabReD streams.",
+    "method": "SSC (Stationary Stream Compression) adapts Streaming Sparse GP (Bui et al., 2017) to TabPFN v3. Because v3's classification output is an attention-weighted kernel smoother over context labels, context rows act as GP pseudo-points. SSC keeps b pseudo-points, each with a real row's embedding, a soft label and a mass. For each new chunk it (1) computes the exact posterior with the TFM itself, using the old pseudo-points plus the new data as context, (2) picks b new pseudo-inputs by mass-weighted k-means, and (3) fits soft labels and masses by minimising KL(posterior || new summary), with total mass fixed to the number of rows seen. v2 (SSC-balanced) gives both classes equal total weight in the KL and guarantees each class at least 20% of the pseudo-points.",
+    "problem_tags": [
+     "tabular-foundation-models",
+     "in-context-learning",
+     "context-compression",
+     "streaming-data",
+     "inference-efficiency",
+     "class-imbalance",
+     "data-summarization"
+    ],
+    "method_tags": [
+     "streaming-sparse-gaussian-process",
+     "gaussian-process",
+     "pseudo-points",
+     "attention-kernel-smoother",
+     "kernel-methods",
+     "k-means",
+     "kl-projection",
+     "soft-labels",
+     "class-balanced-objective"
+    ],
+    "status": [
+     {
+      "kind": "done",
+      "text": "Stationary stream (4 TabArena binary sets, TabPFN v3, 1% budget), mean ROC-AUC at 100% of stream: full context 0.8141 (62.8 s/step); TuneTables re-compress 0.7793 (409.3 s); cumulative TuneTables 0.7299; DualFIFO 0.7112; CURE 0.6664; Random 0.656"
+     },
+     {
+      "kind": "done",
+      "text": "SSC v1: AUC 0.6889 at 100% of stream, 204.9 s/step, below DualFIFO and cumulative TuneTables and slower than full context; majority class dominates the KL on kddcup09 (98% negative)"
+     },
+     {
+      "kind": "done",
+      "text": "TACO reproduced (26 TabArena sets): 0.856 at 1% vs 0.718 for frozen k-means rows and 0.695 Random; full context 0.872"
+     },
+     {
+      "kind": "done",
+      "text": "Row selection on 10 large TabArena sets at 0.1% (median % of full): Random 80.9, row k-means 81.0, ICL-output k-means 84.1; all within 1 pt from 2% up"
+     },
+     {
+      "kind": "done",
+      "text": "Fine-tuned compressor gives no gain over frozen k-means (0.841 / 0.958 at 0.1% / 1%) and is 469% slower than full context at 1%"
+     },
+     {
+      "kind": "done",
+      "text": "TabReD time-ordered streams: TuneTables and TACO exceed the uncompressed time budget early (e.g. Homesite TuneTables at 2%, TACO at 8-9%)"
+     },
+     {
+      "kind": "todo",
+      "text": "Finish SSC-balanced (v2) runs and report mean AUC at 100% of the stream vs DualFIFO 0.7112 / cumulative TuneTables 0.7299"
+     },
+     {
+      "kind": "todo",
+      "text": "Cut SSC per-step cost below full context (now 204.9 s vs 62.8 s)"
+     },
+     {
+      "kind": "todo",
+      "text": "Finish TabReD cumulative-compression runs (11,598 / 14,144 steps)"
+     },
+     {
+      "kind": "note",
+      "text": "Status reconstructed from the project's artifacts (10-19 to 11-05); numbers across phases use different budgets and metrics"
+     }
+    ]
+   },
+   "options": [
+    {
+     "id": "s0-1-take-ssc-to-drifting-time-ordered-stream",
+     "label": "Take SSC to drifting, time-ordered streams",
+     "kind": "problem",
+     "why": "The stationary stream is the easy case; TabReD already showed TuneTables and TACO run out of time budget there, so a cheap drift-aware summary has room.",
+     "projected": {
+      "title": "SSC: context compression for TabPFN on streams",
+      "problem": "Compress the in-context training set of a tabular foundation model on non-stationary, time-ordered data streams with concept drift, updating a tiny summary per chunk without keeping raw history and counting compression time.",
+      "method": "SSC with a forgetting factor on pseudo-point masses so old regimes decay, plus class-balanced KL projection.",
+      "problem_tags": [
+       "tabular-foundation-models",
+       "in-context-learning",
+       "context-compression",
+       "streaming-data",
+       "concept-drift",
+       "inference-efficiency"
+      ],
+      "method_tags": [
+       "streaming-sparse-gaussian-process",
+       "gaussian-process",
+       "pseudo-points",
+       "attention-kernel-smoother",
+       "kernel-methods",
+       "kl-projection",
+       "class-balanced-objective"
+      ],
+      "status": [
+       {
+        "kind": "done",
+        "text": "Stationary stream (4 TabArena binary sets, TabPFN v3, 1% budget), mean ROC-AUC at 100% of stream: full context 0.8141 (62.8 s/step); TuneTables re-compress 0.7793 (409.3 s); cumulative TuneTables 0.7299; DualFIFO 0.7112; CURE 0.6664; Random 0.656"
+       },
+       {
+        "kind": "done",
+        "text": "SSC v1: AUC 0.6889 at 100% of stream, 204.9 s/step, below DualFIFO and cumulative TuneTables and slower than full context; majority class dominates the KL on kddcup09 (98% negative)"
+       },
+       {
+        "kind": "done",
+        "text": "TACO reproduced (26 TabArena sets): 0.856 at 1% vs 0.718 for frozen k-means rows and 0.695 Random; full context 0.872"
+       },
+       {
+        "kind": "done",
+        "text": "Row selection on 10 large TabArena sets at 0.1% (median % of full): Random 80.9, row k-means 81.0, ICL-output k-means 84.1; all within 1 pt from 2% up"
+       },
+       {
+        "kind": "done",
+        "text": "Fine-tuned compressor gives no gain over frozen k-means (0.841 / 0.958 at 0.1% / 1%) and is 469% slower than full context at 1%"
+       },
+       {
+        "kind": "done",
+        "text": "TabReD time-ordered streams: TuneTables and TACO exceed the uncompressed time budget early (e.g. Homesite TuneTables at 2%, TACO at 8-9%)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish SSC-balanced (v2) runs and report mean AUC at 100% of the stream vs DualFIFO 0.7112 / cumulative TuneTables 0.7299"
+       },
+       {
+        "kind": "todo",
+        "text": "Cut SSC per-step cost below full context (now 204.9 s vs 62.8 s)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish TabReD cumulative-compression runs (11,598 / 14,144 steps)"
+       },
+       {
+        "kind": "note",
+        "text": "Status reconstructed from the project's artifacts (10-19 to 11-05); numbers across phases use different budgets and metrics"
+       },
+       {
+        "kind": "todo",
+        "text": "Run SSC-balanced with mass decay on the TabReD time-ordered streams (ROC-AUC per step, s/step) vs DualFIFO and cumulative TuneTables"
+       }
+      ]
+     }
+    },
+    {
+     "id": "s0-2-learn-the-context-instead-of-selecting-r",
+     "label": "Learn the context instead of selecting rows",
+     "kind": "method",
+     "why": "TACO's learned latent rows beat row selection by about 14 AUC points at 1%; SSC's soft labels and masses are half-way there.",
+     "projected": {
+      "title": "SSC: context compression for TabPFN on streams",
+      "problem": "Compress the in-context training set of a tabular foundation model on a data stream to a 1% budget, updating the summary per chunk without raw history.",
+      "method": "Learn a small set of latent context rows (embeddings, soft labels) by gradient descent through the frozen TFM, warm-started from the previous chunk's summary.",
+      "problem_tags": [
+       "tabular-foundation-models",
+       "in-context-learning",
+       "context-compression",
+       "streaming-data",
+       "data-summarization"
+      ],
+      "method_tags": [
+       "prompt-tuning",
+       "soft-labels",
+       "dataset-distillation",
+       "transformer",
+       "pseudo-points"
+      ],
+      "status": [
+       {
+        "kind": "done",
+        "text": "Stationary stream (4 TabArena binary sets, TabPFN v3, 1% budget), mean ROC-AUC at 100% of stream: full context 0.8141 (62.8 s/step); TuneTables re-compress 0.7793 (409.3 s); cumulative TuneTables 0.7299; DualFIFO 0.7112; CURE 0.6664; Random 0.656"
+       },
+       {
+        "kind": "done",
+        "text": "SSC v1: AUC 0.6889 at 100% of stream, 204.9 s/step, below DualFIFO and cumulative TuneTables and slower than full context; majority class dominates the KL on kddcup09 (98% negative)"
+       },
+       {
+        "kind": "done",
+        "text": "TACO reproduced (26 TabArena sets): 0.856 at 1% vs 0.718 for frozen k-means rows and 0.695 Random; full context 0.872"
+       },
+       {
+        "kind": "done",
+        "text": "Row selection on 10 large TabArena sets at 0.1% (median % of full): Random 80.9, row k-means 81.0, ICL-output k-means 84.1; all within 1 pt from 2% up"
+       },
+       {
+        "kind": "done",
+        "text": "Fine-tuned compressor gives no gain over frozen k-means (0.841 / 0.958 at 0.1% / 1%) and is 469% slower than full context at 1%"
+       },
+       {
+        "kind": "done",
+        "text": "TabReD time-ordered streams: TuneTables and TACO exceed the uncompressed time budget early (e.g. Homesite TuneTables at 2%, TACO at 8-9%)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish SSC-balanced (v2) runs and report mean AUC at 100% of the stream vs DualFIFO 0.7112 / cumulative TuneTables 0.7299"
+       },
+       {
+        "kind": "todo",
+        "text": "Cut SSC per-step cost below full context (now 204.9 s vs 62.8 s)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish TabReD cumulative-compression runs (11,598 / 14,144 steps)"
+       },
+       {
+        "kind": "note",
+        "text": "Status reconstructed from the project's artifacts (10-19 to 11-05); numbers across phases use different budgets and metrics"
+       },
+       {
+        "kind": "todo",
+        "text": "Streaming latent-context learning: mean ROC-AUC at 100% of the stream and s/step vs SSC and re-compress TuneTables (0.7793, 409 s)"
+       }
+      ]
+     }
+    },
+    {
+     "id": "s0-3-make-the-summary-cheap-no-tfm-posterior-",
+     "label": "Make the summary cheap: no TFM posterior per chunk",
+     "kind": "method",
+     "why": "SSC costs 204.9 s/step, three times full context; a class-balanced k-means or reservoir summary costs seconds and DualFIFO already reaches 0.7112.",
+     "projected": {
+      "title": "SSC: context compression for TabPFN on streams",
+      "problem": "Keep tabular foundation model inference cheaper than full context on a data stream while keeping accuracy, with a fixed tiny context budget.",
+      "method": "Class-balanced streaming k-means summary in the TFM embedding space with mass-weighted soft labels, updated without calling the TFM.",
+      "problem_tags": [
+       "tabular-foundation-models",
+       "context-compression",
+       "streaming-data",
+       "inference-efficiency",
+       "class-imbalance"
+      ],
+      "method_tags": [
+       "k-means",
+       "soft-labels",
+       "class-balanced-objective",
+       "coreset-selection",
+       "greedy-selection"
+      ],
+      "status": [
+       {
+        "kind": "done",
+        "text": "Stationary stream (4 TabArena binary sets, TabPFN v3, 1% budget), mean ROC-AUC at 100% of stream: full context 0.8141 (62.8 s/step); TuneTables re-compress 0.7793 (409.3 s); cumulative TuneTables 0.7299; DualFIFO 0.7112; CURE 0.6664; Random 0.656"
+       },
+       {
+        "kind": "done",
+        "text": "SSC v1: AUC 0.6889 at 100% of stream, 204.9 s/step, below DualFIFO and cumulative TuneTables and slower than full context; majority class dominates the KL on kddcup09 (98% negative)"
+       },
+       {
+        "kind": "done",
+        "text": "TACO reproduced (26 TabArena sets): 0.856 at 1% vs 0.718 for frozen k-means rows and 0.695 Random; full context 0.872"
+       },
+       {
+        "kind": "done",
+        "text": "Row selection on 10 large TabArena sets at 0.1% (median % of full): Random 80.9, row k-means 81.0, ICL-output k-means 84.1; all within 1 pt from 2% up"
+       },
+       {
+        "kind": "done",
+        "text": "Fine-tuned compressor gives no gain over frozen k-means (0.841 / 0.958 at 0.1% / 1%) and is 469% slower than full context at 1%"
+       },
+       {
+        "kind": "done",
+        "text": "TabReD time-ordered streams: TuneTables and TACO exceed the uncompressed time budget early (e.g. Homesite TuneTables at 2%, TACO at 8-9%)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish SSC-balanced (v2) runs and report mean AUC at 100% of the stream vs DualFIFO 0.7112 / cumulative TuneTables 0.7299"
+       },
+       {
+        "kind": "todo",
+        "text": "Cut SSC per-step cost below full context (now 204.9 s vs 62.8 s)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish TabReD cumulative-compression runs (11,598 / 14,144 steps)"
+       },
+       {
+        "kind": "note",
+        "text": "Status reconstructed from the project's artifacts (10-19 to 11-05); numbers across phases use different budgets and metrics"
+       },
+       {
+        "kind": "todo",
+        "text": "Class-balanced streaming k-means: mean ROC-AUC at 100% and s/step vs DualFIFO (0.7112, 3.8 s) and SSC v1 (0.6889, 204.9 s)"
+       }
+      ]
+     }
+    },
+    {
+     "id": "s0-4-position-it-as-continual-learning-with-a",
+     "label": "Position it as continual learning with a replay memory",
+     "kind": "positioning",
+     "why": "The setting is a fixed-size memory updated per chunk; framing SSC as a replay-buffer method opens the continual-learning baselines and benchmarks.",
+     "projected": {
+      "title": "SSC: context compression for TabPFN on streams",
+      "problem": "Continual learning for tabular foundation models: maintain a fixed-size in-context memory over a data stream so in-context predictions stay accurate as chunks arrive.",
+      "method": "SSC as a memory update rule (pseudo-points with soft labels and masses) compared with reservoir sampling and class-balanced replay.",
+      "problem_tags": [
+       "tabular-foundation-models",
+       "in-context-learning",
+       "continual-learning",
+       "streaming-data",
+       "class-imbalance"
+      ],
+      "method_tags": [
+       "replay-buffer",
+       "reservoir-sampling",
+       "experience-replay",
+       "pseudo-points",
+       "soft-labels",
+       "class-balanced-objective"
+      ],
+      "status": [
+       {
+        "kind": "done",
+        "text": "Stationary stream (4 TabArena binary sets, TabPFN v3, 1% budget), mean ROC-AUC at 100% of stream: full context 0.8141 (62.8 s/step); TuneTables re-compress 0.7793 (409.3 s); cumulative TuneTables 0.7299; DualFIFO 0.7112; CURE 0.6664; Random 0.656"
+       },
+       {
+        "kind": "done",
+        "text": "SSC v1: AUC 0.6889 at 100% of stream, 204.9 s/step, below DualFIFO and cumulative TuneTables and slower than full context; majority class dominates the KL on kddcup09 (98% negative)"
+       },
+       {
+        "kind": "done",
+        "text": "TACO reproduced (26 TabArena sets): 0.856 at 1% vs 0.718 for frozen k-means rows and 0.695 Random; full context 0.872"
+       },
+       {
+        "kind": "done",
+        "text": "Row selection on 10 large TabArena sets at 0.1% (median % of full): Random 80.9, row k-means 81.0, ICL-output k-means 84.1; all within 1 pt from 2% up"
+       },
+       {
+        "kind": "done",
+        "text": "Fine-tuned compressor gives no gain over frozen k-means (0.841 / 0.958 at 0.1% / 1%) and is 469% slower than full context at 1%"
+       },
+       {
+        "kind": "done",
+        "text": "TabReD time-ordered streams: TuneTables and TACO exceed the uncompressed time budget early (e.g. Homesite TuneTables at 2%, TACO at 8-9%)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish SSC-balanced (v2) runs and report mean AUC at 100% of the stream vs DualFIFO 0.7112 / cumulative TuneTables 0.7299"
+       },
+       {
+        "kind": "todo",
+        "text": "Cut SSC per-step cost below full context (now 204.9 s vs 62.8 s)"
+       },
+       {
+        "kind": "todo",
+        "text": "Finish TabReD cumulative-compression runs (11,598 / 14,144 steps)"
+       },
+       {
+        "kind": "note",
+        "text": "Status reconstructed from the project's artifacts (10-19 to 11-05); numbers across phases use different budgets and metrics"
+       },
+       {
+        "kind": "todo",
+        "text": "Add reservoir sampling and class-balanced reservoir to the stationary-stream table (ROC-AUC at 100%, s/step)"
+       }
+      ]
+     }
+    }
+   ],
+   "status": "ready",
+   "notes": "Status reconstructed from the project's artifacts; SSC-balanced v2 was still running at the last update."
+  }
+ ],
+ "current": "s0",
+ "anchor": 0.6623677702061281
+}

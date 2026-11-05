@@ -1,0 +1,79 @@
+{
+ "options": [
+  {
+   "label": "Switch to exact MILP baseline",
+   "kind": "method",
+   "projected": {
+    "problem": "Online 3D bin packing with boxes arriving sequentially.",
+    "method": "Mixed integer linear programming with branch and bound.",
+    "problem_tags": [
+     "bin-packing",
+     "online-packing",
+     "3d-packing"
+    ],
+    "method_tags": [
+     "milp",
+     "branch-and-bound"
+    ],
+    "todo": [
+     "Solve 50 small instances with MILP"
+    ]
+   },
+   "score": 99,
+   "why": "r"
+  },
+  {
+   "label": "Transfer the policy to vehicle routing",
+   "kind": "problem",
+   "projected": {
+    "problem": "Vehicle routing with time windows.",
+    "method": "Deep reinforcement learning with attention trained by PPO.",
+    "problem_tags": [
+     "vehicle-routing",
+     "time-windows"
+    ],
+    "method_tags": [
+     "deep-rl",
+     "ppo",
+     "attention"
+    ]
+   },
+   "why": "r"
+  }
+ ],
+ "add_papers": [
+  {
+   "title": "Suggested paper on packing with transformers",
+   "year": 2023,
+   "problem": "Online bin packing.",
+   "method": "Transformer RL.",
+   "problem_tags": [
+    "bin-packing"
+   ],
+   "method_tags": [
+    "deep-rl",
+    "transformer"
+   ],
+   "near": [
+    "W105"
+   ]
+  }
+ ],
+ "notes": "fixture notes",
+ "research": {
+  "status": [
+   {
+    "kind": "done",
+    "text": "Baseline PPO policy reaches 71% utilisation on synthetic boxes"
+   },
+   {
+    "kind": "todo",
+    "text": "Evaluate on real warehouse order logs (utilisation %)"
+   },
+   {
+    "kind": "todo",
+    "text": "Compare against MILP lower bound"
+   }
+  ]
+ }
+}

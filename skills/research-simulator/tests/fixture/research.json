@@ -1,0 +1,25 @@
+{
+ "title": "Learning-augmented online 3D packing",
+ "problem": "Online 3D bin packing with boxes arriving sequentially, maximising container utilisation.",
+ "method": "Deep reinforcement learning with an attention policy trained by PPO.",
+ "problem_tags": [
+  "bin-packing",
+  "online-packing",
+  "3d-packing"
+ ],
+ "method_tags": [
+  "deep-rl",
+  "ppo",
+  "attention"
+ ],
+ "status": [
+  {
+   "kind": "done",
+   "text": "Baseline PPO policy reaches 71% utilisation on synthetic boxes"
+  },
+  {
+   "kind": "todo",
+   "text": "Evaluate on real warehouse order logs (utilisation %)"
+  }
+ ]
+}
