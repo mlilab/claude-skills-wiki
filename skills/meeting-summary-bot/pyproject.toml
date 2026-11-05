@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meeting-summary-bot"
+version = "0.1.0"
+description = "Slack bot that writes the lab's weekly 3-line meeting summary with Claude"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=2.5,<3",
+    "slack-bolt>=1.30,<2",
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+meeting-bot = "meeting_bot.__main__:main"
+
+[tool.setuptools]
+packages = ["meeting_bot"]
+
+[tool.setuptools.package-data]
+meeting_bot = ["prompt.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["meeting_bot", "tests"]

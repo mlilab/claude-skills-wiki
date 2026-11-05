@@ -12,6 +12,7 @@ This repository collects Claude Code and Codex skills shared by the team. **Each
 | [Humanize Paper](skills/humanize-paper/README.md) | Rewrites or drafts English ML paper prose so it reads human-written and is easy to parse, keeping LaTeX, citations, numbers and claim scope intact. |
 | [Humanize Writing](skills/humanize-writing/README.md) | Rewrites or drafts resumes, statements, 자기소개서, applications, emails and posts in Korean or English so they read human-written, without inventing facts. |
 | [Research Simulator](skills/research-simulator/README.md) | Puts your research at the centre of a zoomable n-hop map of related papers, offers next moves, and re-maps the neighbourhood and status after each move, leaving needed experiments as TODO items. |
+| [Meeting Summary Bot](skills/meeting-summary-bot/README.md) | A Slack bot for the weekly 3-line pre-meeting summary: students DM their past feedback notes (or say it is a new topic) and this week's slides, and Claude writes the summary in the professor's format, in Korean with English key terms. |
 
 ## Installation
 
