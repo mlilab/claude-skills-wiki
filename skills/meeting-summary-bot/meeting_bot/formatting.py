@@ -71,6 +71,18 @@ def choice_text(action_id: str) -> str:
     }[action_id]
 
 
+def chosen_blocks(message: dict[str, Any], action_id: str) -> tuple[str, list[dict[str, Any]]]:
+    """The clicked message redrawn without its buttons, with the choice underneath.
+
+    The original text comes from the message's own section blocks: the payload's flat
+    `text` field has its line breaks collapsed, so reusing it would squash the message.
+    """
+    sections = [b for b in message.get("blocks") or [] if b.get("type") == "section" and b.get("text")]
+    original = "\n\n".join(b["text"]["text"] for b in sections) or message.get("text", "")
+    choice = choice_text(action_id)
+    return f"{original}\n\n{choice}", [_mrkdwn(original), _mrkdwn(choice)]
+
+
 def choice_blocks(text: str, *, skip_label: str) -> list[dict[str, Any]]:
     """`text` with the two step-1 buttons under it."""
     return [

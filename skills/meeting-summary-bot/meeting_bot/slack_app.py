@@ -227,8 +227,8 @@ class SummaryBot:
         if self._is_busy(req.user):
             self._reply(client, req, formatting.BUSY_TEXT)
             return
-        choice = formatting.choice_text(action_id)
-        self._update(client, req, message_ts, f"{message.get('text', '')}\n\n{choice}", blocks=[])
+        text, blocks = formatting.chosen_blocks(message, action_id)
+        self._update(client, req, message_ts, text, blocks=blocks)
         if action_id == formatting.RESTART_ACTION:
             with self._lock:
                 self._sessions.pop((req.user, req.channel), None)

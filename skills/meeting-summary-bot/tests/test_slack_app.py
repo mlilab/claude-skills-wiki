@@ -213,7 +213,7 @@ def test_restart_button_brings_back_the_greeting():
     slack = FakeSlack()
     bot.handle(dm(files=[PDF]), slack, is_dm=True)  # a half-finished session...
     bot.handle_action(formatting.RESTART_ACTION, click(formatting.RESTART_ACTION, text="끝"), slack)
-    assert slack.updates[-1] == {"channel": "D1", "ts": "50.0", "text": "끝\n\n→ 🔄 새 요약 시작하기", "blocks": []}
+    assert slack.updates[-1]["text"] == "끝\n\n→ 🔄 새 요약 시작하기"
     assert slack.last == formatting.GREETING_TEXT
     assert button_ids(slack.posts[-1]) == [formatting.NEW_TOPIC_ACTION, formatting.SKIP_ACTION]
     bot.handle(dm(files=[NOTES]), slack, is_dm=True)  # ...is dropped: only the notes are there now
@@ -248,7 +248,10 @@ def test_new_topic_button_from_the_greeting():
         "channel": "D1",
         "ts": "50.0",
         "text": "인사\n\n→ 🆕 새 주제예요",
-        "blocks": [],
+        "blocks": [
+            {"type": "section", "text": {"type": "mrkdwn", "text": "인사"}},
+            {"type": "section", "text": {"type": "mrkdwn", "text": "→ 🆕 새 주제예요"}},
+        ],
     }
     assert slack.last.endswith(formatting.NEED_MATERIAL_TEXT)
     bot.handle(dm(files=[PDF]), slack, is_dm=True)
@@ -470,3 +473,15 @@ def test_download_slack_file(monkeypatch, response, result):
     else:
         with pytest.raises(UserError, match=result):
             download_slack_file("https://files/F1", "xoxb-t", 5)
+
+
+def test_clicked_message_keeps_its_line_breaks():
+    bot, _ = make_bot()
+    slack = FakeSlack()
+    body = click(formatting.NEW_TOPIC_ACTION, text="flattened by Slack")
+    body["message"]["blocks"] = formatting.choice_blocks(formatting.GREETING_TEXT, skip_label=formatting.SKIP_LABEL)
+    bot.handle_action(formatting.NEW_TOPIC_ACTION, body, slack)
+    redrawn = slack.updates[-1]
+    assert [b["type"] for b in redrawn["blocks"]] == ["section", "section"]  # buttons gone
+    assert redrawn["blocks"][0]["text"]["text"] == formatting.GREETING_TEXT  # original, with line breaks
+    assert redrawn["blocks"][1]["text"]["text"] == "→ 🆕 새 주제예요"
