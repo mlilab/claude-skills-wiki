@@ -1,0 +1,65 @@
+{
+ "title": "SSC: context compression for TabPFN on streams",
+ "problem": "Tabular foundation models (TabPFN v3, TabICL) predict by putting the whole training set in context, so inference cost grows with the data. The project compresses that in-context training set to a tiny budget (0.1-8% of the pool earlier, now 1%) while keeping test accuracy, and counts selection or compression time inside the cost. The newest setting is a stream: data arrive in 10% chunks, and the summary must be updated without keeping the raw history, as C_t = compress(C_(t-1) ∪ D_t). Runs so far cover a stationary (iid) stream on 4 TabArena binary datasets with 30k-50k rows, and earlier time-ordered TabReD streams.",
+ "method": "SSC (Stationary Stream Compression) adapts Streaming Sparse GP (Bui et al., 2017) to TabPFN v3. Because v3's classification output is an attention-weighted kernel smoother over context labels, context rows act as GP pseudo-points. SSC keeps b pseudo-points, each with a real row's embedding, a soft label and a mass. For each new chunk it (1) computes the exact posterior with the TFM itself, using the old pseudo-points plus the new data as context, (2) picks b new pseudo-inputs by mass-weighted k-means, and (3) fits soft labels and masses by minimising KL(posterior || new summary), with total mass fixed to the number of rows seen. v2 (SSC-balanced) gives both classes equal total weight in the KL and guarantees each class at least 20% of the pseudo-points.",
+ "problem_tags": [
+  "tabular-foundation-models",
+  "in-context-learning",
+  "context-compression",
+  "streaming-data",
+  "inference-efficiency",
+  "class-imbalance",
+  "data-summarization"
+ ],
+ "method_tags": [
+  "streaming-sparse-gaussian-process",
+  "pseudo-points",
+  "attention-kernel-smoother",
+  "k-means",
+  "kl-projection",
+  "soft-labels",
+  "class-balanced-objective"
+ ],
+ "status": [
+  {
+   "kind": "done",
+   "text": "Stationary stream (4 TabArena binary sets, TabPFN v3, 1% budget), mean ROC-AUC at 100% of stream: full context 0.8141 (62.8 s/step); TuneTables re-compress 0.7793 (409.3 s); cumulative TuneTables 0.7299; DualFIFO 0.7112; CURE 0.6664; Random 0.656"
+  },
+  {
+   "kind": "done",
+   "text": "SSC v1: AUC 0.6889 at 100% of stream, 204.9 s/step, below DualFIFO and cumulative TuneTables and slower than full context; majority class dominates the KL on kddcup09 (98% negative)"
+  },
+  {
+   "kind": "done",
+   "text": "TACO reproduced (26 TabArena sets): 0.856 at 1% vs 0.718 for frozen k-means rows and 0.695 Random; full context 0.872"
+  },
+  {
+   "kind": "done",
+   "text": "Row selection on 10 large TabArena sets at 0.1% (median % of full): Random 80.9, row k-means 81.0, ICL-output k-means 84.1; all within 1 pt from 2% up"
+  },
+  {
+   "kind": "done",
+   "text": "Fine-tuned compressor gives no gain over frozen k-means (0.841 / 0.958 at 0.1% / 1%) and is 469% slower than full context at 1%"
+  },
+  {
+   "kind": "done",
+   "text": "TabReD time-ordered streams: TuneTables and TACO exceed the uncompressed time budget early (e.g. Homesite TuneTables at 2%, TACO at 8-9%)"
+  },
+  {
+   "kind": "todo",
+   "text": "Finish SSC-balanced (v2) runs and report mean AUC at 100% of the stream vs DualFIFO 0.7112 / cumulative TuneTables 0.7299"
+  },
+  {
+   "kind": "todo",
+   "text": "Cut SSC per-step cost below full context (now 204.9 s vs 62.8 s)"
+  },
+  {
+   "kind": "todo",
+   "text": "Finish TabReD cumulative-compression runs (11,598 / 14,144 steps)"
+  },
+  {
+   "kind": "note",
+   "text": "Status reconstructed from the project's artifacts (10-19 to 11-05); numbers across phases use different budgets and metrics"
+  }
+ ]
+}

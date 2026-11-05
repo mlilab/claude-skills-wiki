@@ -1,0 +1,53 @@
+{
+ "options": [
+  {
+   "label": "Take SSC to drifting, time-ordered streams",
+   "kind": "problem",
+   "why": "The stationary stream is the easy case; TabReD already showed TuneTables and TACO run out of time budget there, so a cheap drift-aware summary has room.",
+   "projected": {
+    "problem": "Compress the in-context training set of a tabular foundation model on non-stationary, time-ordered data streams with concept drift, updating a tiny summary per chunk without keeping raw history and counting compression time.",
+    "method": "SSC with a forgetting factor on pseudo-point masses so old regimes decay, plus class-balanced KL projection.",
+    "problem_tags": ["tabular-foundation-models", "in-context-learning", "context-compression", "streaming-data", "concept-drift", "inference-efficiency"],
+    "method_tags": ["streaming-sparse-gaussian-process", "pseudo-points", "attention-kernel-smoother", "kl-projection", "class-balanced-objective"],
+    "todo": ["Run SSC-balanced with mass decay on the TabReD time-ordered streams (ROC-AUC per step, s/step) vs DualFIFO and cumulative TuneTables"]
+   }
+  },
+  {
+   "label": "Learn the context instead of selecting rows",
+   "kind": "method",
+   "why": "TACO's learned latent rows beat row selection by about 14 AUC points at 1%; SSC's soft labels and masses are half-way there.",
+   "projected": {
+    "problem": "Compress the in-context training set of a tabular foundation model on a data stream to a 1% budget, updating the summary per chunk without raw history.",
+    "method": "Learn a small set of latent context rows (embeddings, soft labels) by gradient descent through the frozen TFM, warm-started from the previous chunk's summary.",
+    "problem_tags": ["tabular-foundation-models", "in-context-learning", "context-compression", "streaming-data", "data-summarization"],
+    "method_tags": ["prompt-tuning", "soft-labels", "dataset-distillation", "transformer", "pseudo-points"],
+    "todo": ["Streaming latent-context learning: mean ROC-AUC at 100% of the stream and s/step vs SSC and re-compress TuneTables (0.7793, 409 s)"]
+   }
+  },
+  {
+   "label": "Make the summary cheap: no TFM posterior per chunk",
+   "kind": "method",
+   "why": "SSC costs 204.9 s/step, three times full context; a class-balanced k-means or reservoir summary costs seconds and DualFIFO already reaches 0.7112.",
+   "projected": {
+    "problem": "Keep tabular foundation model inference cheaper than full context on a data stream while keeping accuracy, with a fixed tiny context budget.",
+    "method": "Class-balanced streaming k-means summary in the TFM embedding space with mass-weighted soft labels, updated without calling the TFM.",
+    "problem_tags": ["tabular-foundation-models", "context-compression", "streaming-data", "inference-efficiency", "class-imbalance"],
+    "method_tags": ["k-means", "soft-labels", "class-balanced-objective", "coreset-selection", "greedy-selection"],
+    "todo": ["Class-balanced streaming k-means: mean ROC-AUC at 100% and s/step vs DualFIFO (0.7112, 3.8 s) and SSC v1 (0.6889, 204.9 s)"]
+   }
+  },
+  {
+   "label": "Position it as continual learning with a replay memory",
+   "kind": "positioning",
+   "why": "The setting is a fixed-size memory updated per chunk; framing SSC as a replay-buffer method opens the continual-learning baselines and benchmarks.",
+   "projected": {
+    "problem": "Continual learning for tabular foundation models: maintain a fixed-size in-context memory over a data stream so in-context predictions stay accurate as chunks arrive.",
+    "method": "SSC as a memory update rule (pseudo-points with soft labels and masses) compared with reservoir sampling and class-balanced replay.",
+    "problem_tags": ["tabular-foundation-models", "in-context-learning", "continual-learning", "streaming-data", "class-imbalance"],
+    "method_tags": ["replay-buffer", "reservoir-sampling", "pseudo-points", "soft-labels", "class-balanced-objective"],
+    "todo": ["Add reservoir sampling and class-balanced reservoir to the stationary-stream table (ROC-AUC at 100%, s/step)"]
+   }
+  }
+ ],
+ "notes": "Status reconstructed from the project's artifacts; SSC-balanced v2 was still running at the last update."
+}

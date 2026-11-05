@@ -1,0 +1,4 @@
+{"problem": {"concept-drift": ["streaming-data"]},
+ "method":  {"streaming-sparse-gaussian-process": ["gaussian-process"],
+             "attention-kernel-smoother": ["kernel-methods"],
+             "reservoir-sampling": ["experience-replay"]}}

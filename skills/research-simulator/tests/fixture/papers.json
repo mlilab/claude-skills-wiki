@@ -1,0 +1,156 @@
+{
+ "meta": {
+  "source": "fixture",
+  "query": "test",
+  "seeds": [
+   "W100",
+   "W101",
+   "W102",
+   "W103",
+   "W104",
+   "W105"
+  ]
+ },
+ "papers": [
+  {
+   "id": "W100",
+   "title": "Synthetic routing paper 0 with rl",
+   "year": 2018,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 0,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W101",
+   "title": "Synthetic routing paper 1 with rl",
+   "year": 2019,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 7,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W102",
+   "title": "Synthetic routing paper 2 with heur",
+   "year": 2020,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 14,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W103",
+   "title": "Synthetic routing paper 3 with milp",
+   "year": 2021,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 21,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W104",
+   "title": "Synthetic routing paper 4 with heur",
+   "year": 2022,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 28,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W105",
+   "title": "Synthetic packing paper 5 with rl",
+   "year": 2023,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 35,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W106",
+   "title": "Synthetic packing paper 6 with rl",
+   "year": 2018,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 42,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W107",
+   "title": "Synthetic packing paper 7 with rl",
+   "year": 2019,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 49,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W108",
+   "title": "Synthetic packing paper 8 with heur",
+   "year": 2020,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 6,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W109",
+   "title": "Synthetic packing paper 9 with milp",
+   "year": 2021,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 13,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W110",
+   "title": "Synthetic packing paper 10 with heur",
+   "year": 2022,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 20,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W111",
+   "title": "Synthetic routing paper 11 with milp",
+   "year": 2023,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 27,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W112",
+   "title": "Synthetic packing paper 12 with rl",
+   "year": 2018,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 34,
+   "abstract": "synthetic fixture"
+  },
+  {
+   "id": "W113",
+   "title": "Synthetic routing paper 13 with rl",
+   "year": 2019,
+   "venue": "Test Venue",
+   "doi": "",
+   "url": "",
+   "cited_by": 41,
+   "abstract": "synthetic fixture"
+  }
+ ]
+}
