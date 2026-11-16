@@ -14,6 +14,7 @@ This repository collects Claude Code and Codex skills shared by the team. **Each
 | [Research Simulator](skills/research-simulator/README.md) | Puts your research at the centre of a zoomable n-hop map of related papers, offers next moves, and re-maps the neighbourhood and status after each move, leaving needed experiments as TODO items. |
 | [Meeting Summary Bot](skills/meeting-summary-bot/README.md) | A Slack bot for the weekly 3-line pre-meeting summary: students DM their past feedback notes (or say it is a new topic) and this week's slides, and Claude writes the summary in the professor's format, in Korean with English key terms. |
 | [OpenReview Rebuttal Format](skills/openreview-rebuttal-format/README.md) | Formats rebuttal replies and area-chair summaries as OpenReview Markdown in the markup of strong published rebuttals, keeping the author's words, and checks length, rendering problems and changed words. |
+| [GPU Sheet Sync](skills/gpu-sheet-sync/README.md) | After one sign-in with your @mli.kaist.ac.kr account, checks every lab server in the GPU sheet over SSH with `nvidia-smi`, summarizes idle and busy GPUs, and clears the names on idle GPUs once you agree. |
 
 ## Installation
 
