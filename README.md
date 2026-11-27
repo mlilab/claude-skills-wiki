@@ -16,6 +16,7 @@ This repository collects Claude Code and Codex skills shared by the team. **Each
 | [OpenReview Rebuttal Format](skills/openreview-rebuttal-format/README.md) | Formats rebuttal replies and area-chair summaries as OpenReview Markdown in the markup of strong published rebuttals, keeping the author's words, and checks length, rendering problems and changed words. |
 | [GPU Sheet Sync](skills/gpu-sheet-sync/README.md) | After one sign-in with your @mli.kaist.ac.kr account, checks every lab server in the GPU sheet over SSH with `nvidia-smi`, summarizes idle and busy GPUs, and clears the names on idle GPUs once you agree. |
 | [Paper Figure](skills/paper-figure/README.md) | Works out with you how to show a paper's key idea (message, layout, worked example, palette from popular color sets with role-by-role assignment), then writes a detailed image-generation prompt for a polished draft that you rebuild in PowerPoint. |
+| [Best-Paper Writing](skills/bestpaper-writing/README.md) | Drafts ML and computer vision paper sections from author notes, plans figures, and checks drafts against writing patterns from award-winning papers. |
 
 ## Installation
 
