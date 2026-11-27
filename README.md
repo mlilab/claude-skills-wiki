@@ -17,6 +17,8 @@ This repository collects Claude Code and Codex skills shared by the team. **Each
 | [GPU Sheet Sync](skills/gpu-sheet-sync/README.md) | After one sign-in with your @mli.kaist.ac.kr account, checks every lab server in the GPU sheet over SSH with `nvidia-smi`, summarizes idle and busy GPUs, and clears the names on idle GPUs once you agree. |
 | [Paper Figure](skills/paper-figure/README.md) | Works out with you how to show a paper's key idea (message, layout, worked example, palette from popular color sets with role-by-role assignment), then writes a detailed image-generation prompt for a polished draft that you rebuild in PowerPoint. |
 | [Best-Paper Writing](skills/bestpaper-writing/README.md) | Drafts ML and computer vision paper sections from author notes, plans figures, and checks drafts against writing patterns from award-winning papers. |
+| [NoCheatAdvice](skills/no-cheat-advice/SKILL.md) | After research advice is given, splits it into items and checks each against a live literature search, attaching the closest prior work (authors, year, core idea) so recalled ideas are not mistaken for new ones; common practice and items with no prior work are only labelled. |
+| [GAI-builder](skills/gai-builder/SKILL.md) | Operates a target site in a real browser as a GUI agent, finds where agents get stuck, then builds a GAI layer (a site-wide userscript over the real site) and measures agent performance before and after. |
 
 ## Installation
 
