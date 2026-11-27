@@ -11,7 +11,7 @@ A GAI (Graphic Agent Interface) is a layer over an existing website that lets an
 - Output: `gai.user.js` (the layer: a site-independent core plus a small site adapter), a report with before/after screenshots and measurements, and the task, finding and run records.
 - Goal: higher GUI-agent task performance on the whole site. Human appeal is not a goal.
 
-The layer is a set of rules, never a rebuilt page. An earlier version of this skill rebuilt pages from captured content, and the result fitted only the tasks it was built from (a page for one district of one city). A layer keeps every page and every function of the site and changes how each one is seen and operated.
+The layer is a set of rules, never a rebuilt page. A page rebuilt from captured content fits only the tasks it was built from. A layer keeps every page and every function of the site and changes how each one is seen and operated.
 
 ## Ground rules
 
@@ -27,7 +27,7 @@ The layer is a set of rules, never a rebuilt page. An earlier version of this sk
 
 **Keep every function.** The layer may hide (with a visible way back), move, shrink and relabel. It may not remove a control or cover one: check floating widgets and anything fixed to the screen edges.
 
-**Passive first.** A weak agent does not read a legend and does not change its habits. In measurement, an uninstructed small model used the command bar 0 times and clicked as usual; every gain came from changes that work on an agent that keeps clicking (no popup, dense list, pager and state fixed on screen, dropdown options as buttons). Spend effort there first. The command bar pays off only for agents that are told about it.
+**Passive first.** Do not count on the agent reading a legend or changing its habits; an agent that is not told about the command box will keep clicking. Changes that work on such an agent come first: no popup, dense lists, pager, sections, counts and state fixed on screen, dropdown options as buttons. The command box pays off only for agents that are told about it.
 
 **The script is the result, the report is the explanation.** No rationale or findings inside the layer's UI.
 
@@ -88,9 +88,9 @@ The layer is `scripts/gai-layer.core.js`, used as is, plus an adapter for the si
 - hides large overlays that were present at load or appear with no user action, keeps a "show hidden popups" button, and never hides something the agent opened itself;
 - numbers every operable element with a red mark at the start of its label, including clickable elements that are not links or buttons; icon-only controls get a name; marks for covered or duplicate elements are dropped;
 - renders each `<select>` (2 to 60 options) as buttons that set the original select and fire `change`, so the site's own handlers run;
-- pins the page's pager and the current state (selected filters, URL) to a bar fixed at the bottom;
+- pins the page's pager, the current state (selected filters, URL) and, on pages longer than 2.5 screens, section jump buttons with item counts to a bar fixed at the bottom;
 - stops CSS animation and carousel autoplay, opens new-window links in place, lifts bottom-fixed widgets above the bar;
-- offers a command box that keeps keyboard focus: a number activates that control (no Enter needed), `N text` fills input N and submits, a word lists matching controls, `q words` runs site search, `n p t e` scroll, `b` back, `h` home.
+- offers a command box that keeps keyboard focus: a number activates that control (no Enter needed), `N text` fills input N and submits, a word lists matching controls or, when no control matches, finds the word in the page text, scrolls to it and highlights it (`/word` searches text only; the same word again goes to the next match), `q words` runs site search, `n p t e` scroll, `b` back, `h` home.
 
 The adapter is a function returning an object. Every field is optional.
 
@@ -103,24 +103,27 @@ The adapter is a function returning an object. Every field is optional.
 | `skip` | Selector of controls that need no number (carousel dots, duplicates) |
 | `resolve` | `[[regex, urlTemplate]]`: turns `javascript:` or `onclick` code into a real URL |
 | `pager` | Selector of the pager if the default (`.pagination,.paging,...`) misses it |
+| `toc` | Selector of section headings for the jump buttons (default `h1,h2,h3,.gai-sec`); a heading's `data-gai-n` attribute is shown as its item count |
 | `state` | Function returning a short string of what is selected (read hidden inputs, the result count) |
 | `commands` | `[[regex, fn(match, api)]]`: extra commands, only for site-wide functions |
 | `stopTimers` | `true` also clears all timers to stop script-driven tickers; off by default because it can break the site |
 | `onPage` | Function run after each refresh, for fixes CSS cannot express |
 
-Example (the adapter of a facility directory, shortened):
+Example, with placeholder selectors and URLs:
 
 ```js
 function GAI_ADAPTER() { return {
   home: '/',
-  search: '/center/nameSearch?NAME={q}',
-  skip: '.swiper-pagination-bullet',
-  gates: [{ sel: '.favorite-layer', label: '로그인' }],
-  state: function () { var a = document.querySelector('#ADDR_NAME'), m = (document.body.innerText.match(/총\s*([\d,]+)\s*개/) || [])[1]; return [a && a.value, m && '시설 ' + m + '개'].filter(Boolean).join(' · '); },
-  css: '.card{display:flex!important;align-items:center;gap:14px;height:auto!important;margin:0 0 4px!important}.card img.thumb{width:60px!important;height:40px!important}' +
-       '.detail-wrap{display:flex!important;flex-direction:column!important}.detail-wrap>.photos{order:99!important}'
+  search: '/search?q={q}',
+  skip: '.carousel-dot',
+  gates: [{ sel: '.save-button', label: 'login' }],
+  state: function (api) { var f = document.querySelector('.filter.active'), all = api.q('.item'); return (f ? api.txt(f) + ' · ' : '') + all.filter(api.vis).length + ' / ' + all.length + ' items'; },
+  css: '.item{display:flex!important;align-items:center;gap:14px;height:auto!important;margin:0 0 4px!important}.item img.thumb{width:60px!important;height:40px!important}' +
+       '.detail{display:flex!important;flex-direction:column!important}.detail>.photos{order:99!important}'
 }; }
 ```
+
+When a site's friction is length rather than broken controls (one page holding hundreds of items, no search, no counts), the adapter's job is sections and counts: in `onPage`, insert a `.gai-sec` heading wherever a rule says a new group starts (for example, a field of each item changes value), and set `data-gai-n` on each heading to the number of visible items under it, so the counts follow the site's own filters. Put the same numbers in `state` (filter, visible count, total). Counts and jump buttons work for an agent that only clicks; text find needs the command box.
 
 The bar's strings are Korean; translate them in the core for sites in other languages.
 
@@ -129,7 +132,9 @@ The bar's strings are Korean; translate them in the core for sites in other lang
 Measure before and after with the same browser and the same tool. This harness shows the real site in a same-origin frame and puts the layer on every page the frame loads, so the agent can navigate freely. First check the site allows it: `fetch('/')` must show no `X-Frame-Options` or frame-ancestors header, and the page must not break out of frames. If it does not allow framing, re-run the layer by hand after each navigation instead.
 
 1. On any page of the site, store the two texts with the run-JavaScript tool: `localStorage.setItem('gai_layer', <core text>)` and `localStorage.setItem('gai_adapter', <adapter text>)`. Keep a local copy and compare length and a hash, because long tool inputs get cut. To change the stored text later, send a small replace-patch and re-check the hash instead of resending everything.
-2. Store the text of `scripts/shell.js` as `gai_shell`, open a small same-origin URL such as `/robots.txt`, and run `eval(localStorage.getItem('gai_shell'))`.
+2. Store the text of `scripts/shell.js` as `gai_shell`, open a light real page of the site (the home page will do), and run `eval(localStorage.getItem('gai_shell'))`. Do not host the shell on a missing URL: a 404 page can carry a CSP that forbids frames, and the frame then shows only a broken-page icon.
+
+Three things about browser tools cost a resend each when forgotten: a value declared in one run-JavaScript call is gone in the next, so write to `localStorage` in the same call that builds the text and check the hash afterwards; a `\uXXXX` escape in tool input arrives as the character itself, so the stored text can differ from the file by that much; and a `scale` on a screenshot you save shrinks the saved file, so take report screenshots at full size.
 
 To compare the browser copy with the file, `scripts/build_userscript.py` prints each text's length and hash (trailing newlines ignored); this gives the same numbers in the page:
 
@@ -141,14 +146,15 @@ The shell also logs every command, click and scroll to `localStorage.gai_log`, w
 
 ## 7. Operate the layered site by screen
 
-Run the development tasks again, then open the page types no task touches. Expect the first pass to embarrass the layer; these all happened in practice:
+Run the development tasks again, then open the page types no task touches. Expect the first pass to expose defects in the layer. Typical ones:
 
-- a mark sat between two menu items and read as belonging to the wrong one;
-- a panel the agent opened was hidden again as a "popup";
-- option buttons overflowed fixed-height rows, and a float fix pushed a whole filter row off to the side on a page type that had not been checked;
-- a mark covered the last characters of a neighbouring address;
-- the bar covered the site's chat button;
-- numbers changed after a re-render and a number typed from memory hit a different control.
+- a mark reads as belonging to the neighbouring control, or covers the end of neighbouring text;
+- a panel the agent opened itself is hidden again as a popup;
+- option buttons overflow fixed-height rows, or a layout fix pushes a row aside on a page type that was not checked;
+- the bar covers something the site fixed to the bottom of the screen;
+- numbers change after a re-render, so a number typed from memory hits a different control;
+- a density rule (a wider column, a smaller image) breaks a layout that depended on the old size and pushes key content further down than in the original;
+- a rule that parses text (a year, a count) picks up the wrong number.
 
 Check on every page type: each mark is unambiguously attached to one control; no control lost its number or became unreachable; popups are gone but recoverable; choosing an option button changes the site's own result; the state readout is true; nothing the site fixed to the screen is covered. Fix in the core if the rule is general, in the adapter if it is about this site's markup. After changing the core, run it once on the local test page before sending it to the browser: `GAI_PAGE=assets/test.html node scripts/gui.mjs '' '[["wait",3000],["type","6"],["wait",1500]]' out.png` (typing 6 should press the third option button). Keep a copy of the layer exactly as each measured run saw it.
 
@@ -162,7 +168,7 @@ Use a weaker model as a fresh subagent if you can; it shows friction that a stro
 | Layer, no instructions about it | what the passive changes are worth |
 | Layer, plus one paragraph describing the bar | what the command path is worth when the agent is told |
 
-Run all tasks in every condition, and report development and held-out tasks separately. Check each answer against the live page yourself. Report what did not improve as plainly as what did: a first layer scored the same as the original, and saying so led to the fixes that mattered. One run per condition is noisy; treat differences of a few actions as noise and say that.
+Run all tasks in every condition, and report development and held-out tasks separately. Check each answer against the live page yourself. Report what did not improve as plainly as what did; a layer that scores the same as the original is a finding, and it points at what to fix. One run per condition is noisy; treat differences of a few actions as noise and say that.
 
 ## 9. Save and report
 

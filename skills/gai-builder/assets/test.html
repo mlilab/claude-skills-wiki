@@ -1,17 +1,17 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>layer test</title>
-<style>body{font:14px sans-serif;margin:0}header{position:sticky;top:0;background:#eef;padding:10px}.card{width:46%;display:inline-block;margin:1%;border:1px solid #999}.ph{height:300px;background:#cde}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50}.modal div{margin:120px auto;width:400px;height:300px;background:#fff}.pagination a{font-size:10px;padding:2px}#tick{font-size:11px}</style></head>
-<body><header><a href="javascript:void(0)" onclick="goHome()"><img src="logo.png"></a> <input id="sbox" placeholder="시설 검색"> <a href="https://example.org/ext" target="_blank">외부</a> <span id="tick">공지 1</span></header>
-<div class="modal" id="promoModal" role="dialog"><div>광고 팝업 <button onclick="this.closest('.modal').style.display='none'">닫기</button></div></div>
-<p>종목 <select id="sport" onchange="render()"><option>전체</option><option>헬스</option><option>수영</option><option>골프</option></select> <b id="count"></b></p>
-<div id="list"></div><div class="pagination"><a href="javascript:go(1)">1</a> <a href="javascript:go(2)">2</a> <a href="javascript:go(3)">3</a></div>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>GAI core test page</title>
+<style>body{font-family:sans-serif;margin:0}header{position:sticky;top:0;background:#eef;padding:8px;display:flex;gap:12px;align-items:center}main{padding:0 40px}.card{display:inline-block;width:30%;margin:6px;border:1px solid #999;padding:6px}.card .ph{height:300px;background:#ddd}.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}.modal div{background:#fff;padding:40px}</style></head>
+<body><header><a href="javascript:void(0)" onclick="goHome()"><img src="logo.png" width="20" height="20"></a> <input id="sbox" placeholder="Search items"> <a href="https://example.org/ext" target="_blank">External</a> <span id="tick">Notice 1</span></header>
+<div class="modal" role="dialog"><div>Promotion <button onclick="this.closest('.modal').remove()">Close</button></div></div>
+<main><p>Group <select id="grp" onchange="render()"><option>All</option><option>Alpha</option><option>Beta</option><option>Gamma</option></select></p><p id="count"></p>
+<div id="list"></div><div class="pagination"><a href="javascript:go(1)">1</a> <a href="javascript:go(2)">2</a> <a href="javascript:go(3)">3</a></div></main>
 <script>
-var DATA=[];for(var i=1;i<=30;i++)DATA.push({n:'시설'+i,s:['헬스','수영','골프'][i%3]});var page=1;
-function render(){var s=document.getElementById('sport').value,rows=DATA.filter(function(x){return s==='전체'||x.s===s});document.getElementById('count').textContent='총 '+rows.length+'개';
- document.getElementById('list').innerHTML=rows.slice((page-1)*10,page*10).map(function(x){return '<div class="card"><div class="ph"></div><a class="title" href="detail.html?id='+x.n+'">'+x.n+'</a> <span>'+x.s+'</span></div>'}).join('');}
-function go(p){page=p;render();scrollTo(0,0)} function goHome(){location.href='test.html'}
-document.getElementById('sbox').addEventListener('keydown',function(e){if(e.keyCode===13)location.href='test.html?q='+encodeURIComponent(this.value)});
-var k=1;setInterval(function(){document.getElementById('tick').textContent='공지 '+(++k)},700);render();
+var G = ['Alpha', 'Beta', 'Gamma'], page = 1;
+function goHome() { location.href = 'test.html'; }
+function go(n) { page = n; render(); }
+function render() { var g = document.getElementById('grp').value, h = '', n = 0; for (var i = 1; i <= 30; i++) { var k = G[i % 3]; if (g !== 'All' && g !== k) continue; n++; h += '<div class="card"><div class="ph"></div><a href="test.html?item=' + i + '">Item ' + i + '</a> ' + k + '</div>'; } document.getElementById('list').innerHTML = h; document.getElementById('count').textContent = n + ' items, page ' + page; }
+document.getElementById('sbox').addEventListener('keydown', function (e) { if (e.keyCode === 13) location.href = 'test.html?q=' + encodeURIComponent(this.value); });
+setInterval(function () { var t = document.getElementById('tick'); t.textContent = 'Notice ' + (1 + parseInt(t.textContent.slice(7), 10) % 5); }, 1500);
+render();
 </script>
-<script src="../scripts/gai-layer.core.js"></script><script>if(location.search.indexOf('nolayer')<0)GAI_LAYER({css:'.card{width:98%!important;display:block!important}.card .ph{display:none!important}',resolve:[[/goHome\(\)/,'test.html']]});</script>
+<script src="../scripts/gai-layer.core.js"></script><script>if (location.search.indexOf('nolayer') < 0) GAI_LAYER({ css: '.card{width:98%!important;display:block!important}.card .ph{display:none!important}', resolve: [[/goHome\(\)/, 'test.html']] });</script>
 </body></html>

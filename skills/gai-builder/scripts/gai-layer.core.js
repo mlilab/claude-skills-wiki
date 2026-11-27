@@ -1,6 +1,6 @@
 function GAI_LAYER(A) {
   if (window.__gai) return; window.__gai = 1;
-  A = Object.assign({ css: '', gates: [], resolve: [], commands: [], search: null, skip: '', home: '/', pager: '.pagination,.paging,[class*=pagination],[class*=paging]', stopTimers: false, state: null, onPage: null }, A || {});
+  A = Object.assign({ css: '', gates: [], resolve: [], commands: [], search: null, skip: '', home: '/', pager: '.pagination,.paging,[class*=pagination],[class*=paging]', toc: 'h1,h2,h3,.gai-sec', stopTimers: false, state: null, onPage: null }, A || {});
   const d = document, W = window;
   const q = (s, r) => { try { return [...(r || d).querySelectorAll(s)]; } catch (e) { return []; } };
   const txt = el => (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
@@ -16,7 +16,7 @@ function GAI_LAYER(A) {
 
   const st = d.createElement('style'); st.id = 'gai-style';
   st.textContent = '*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}' +
-    'body{padding-bottom:104px!important}.gai-hidden{display:none!important}.gai-cf::after{content:"";display:table;clear:both}.gai-select{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}' +
+    'body{padding-bottom:104px!important}.gai-hidden{display:none!important}.gai-cf::after{content:"";display:table;clear:both}::highlight(gai-find){background:#FFE100;color:#000}.gai-select{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}' +
     '#gai-bar{position:fixed;left:0;right:0;bottom:0;z-index:2147483646;background:#14181F;color:#fff;font:15px/1.3 system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:6px 10px;box-sizing:border-box;text-align:left}' +
     '#gai-bar *{box-sizing:border-box;font-family:inherit}#gai-form{display:flex;gap:8px;align-items:center;margin:0}#gai-form b{font-size:16px}' +
     '#gai-cmd{flex:0 0 340px;height:38px;font-size:18px;padding:0 10px;border:2px solid #fff;border-radius:8px;background:#fff;color:#111}' +
@@ -35,7 +35,7 @@ function GAI_LAYER(A) {
   d.body.appendChild(bar); d.body.appendChild(marks);
   const cmd = bar.querySelector('#gai-cmd'), status = bar.querySelector('#gai-status'), pin = bar.querySelector('#gai-pin');
   const say = (t, keepIt) => { status.textContent = t; if (keepIt) { try { sessionStorage.setItem('gai_last', Date.now() + '|' + t); } catch (e) {} } };
-  const HELP = '번호: 그 요소 누르기 | 번호 글자: 그 입력칸에 넣고 제출 | 글자: 이 화면에서 찾기 | q 글자: 사이트 검색 | n p t e: 화면 넘김 | b 뒤로 | h 홈 | popups: 숨긴 팝업';
+  const HELP = '번호: 그 요소 누르기 | 번호 글자: 그 입력칸에 넣고 제출 | 글자: 이 화면에서 찾기 (단추가 없으면 본문 글자, /글자 는 본문만) | q 글자: 사이트 검색 | n p t e: 화면 넘김 | b 뒤로 | h 홈 | popups: 숨긴 팝업';
 
   const ids = new WeakMap(), byN = new Map(); let seq = 0;
   const idOf = el => { if (!ids.has(el)) { ids.set(el, ++seq); byN.set(seq, el); } return ids.get(el); };
@@ -115,12 +115,14 @@ function GAI_LAYER(A) {
   let pinSig = '', stNow = '';
   function pins() {
     const pg = q(A.pager).filter(p => !own(p) && vis(p) && q('a,button', p).length > 1)[0], items = pg ? q('a,button', pg).filter(vis).slice(0, 16) : [];
-    const sig = hidden.length + '/' + (hidden[0] ? hidden[0].classList.contains('gai-hidden') : '') + '/' + items.map(a => txt(a) + (a.closest('.active,.on,.current,[aria-current]') ? '*' : '')).join(',');
+    const heads = d.documentElement.scrollHeight > W.innerHeight * 2.5 ? q(A.toc).filter(h => !own(h) && vis(h) && txt(h)).slice(0, 14) : [];
+    const sig = hidden.length + '/' + (hidden[0] ? hidden[0].classList.contains('gai-hidden') : '') + '/' + items.map(a => txt(a) + (a.closest('.active,.on,.current,[aria-current]') ? '*' : '')).join(',') + '/' + heads.map(h => txt(h) + (h.getAttribute('data-gai-n') || '')).join(',');
     if (sig === pinSig) return; pinSig = sig;
     pin.textContent = '';
     const add = (label, pressed, fn) => { const b = d.createElement('button'); b.type = 'button'; b.className = 'gai-opt'; b.textContent = label; if (pressed != null) b.setAttribute('aria-pressed', pressed); b.addEventListener('click', fn); pin.appendChild(b); };
     if (hidden.length) add('숨긴 팝업 ' + hidden.length + '개 ' + (hidden[0].classList.contains('gai-hidden') ? '보기' : '숨기기'), null, () => run('popups'));
     if (pg) { pin.appendChild(d.createTextNode('쪽')); items.forEach(a => add(txt(a) || name(a), !!a.closest('.active,.on,.current,[aria-current]'), () => { lastUser = Date.now(); a.click(); say('쪽 ‘' + (txt(a) || name(a)) + '’을 눌렀습니다.'); })); }
+    if (heads.length > 2) { pin.appendChild(d.createTextNode('목차')); heads.forEach(h => add(txt(h).slice(0, 16) + (h.getAttribute('data-gai-n') ? ' (' + h.getAttribute('data-gai-n') + ')' : ''), null, () => { lastUser = Date.now(); h.scrollIntoView({ block: 'start' }); W.scrollBy(0, -70); draw(); say('‘' + txt(h).slice(0, 30) + '’ 위치로 갔습니다.'); })); }
   }
   function quiet() {
     q('[class*=swiper]').forEach(el => { try { el.swiper && el.swiper.autoplay && el.swiper.autoplay.stop(); } catch (e) {} });
@@ -145,9 +147,21 @@ function GAI_LAYER(A) {
     ['keydown', 'keypress', 'keyup'].forEach(k => el.dispatchEvent(new KeyboardEvent(k, { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true })));
     if (el.form && el.form.getAttribute('action')) setTimeout(() => { el.form.requestSubmit ? el.form.requestSubmit() : el.form.submit(); }, 300);
   }
+  let tf = { k: '', i: -1 };
+  function textFind(t) {
+    const k = t.toLowerCase(), hits = [], tw = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT); let n;
+    while ((n = tw.nextNode())) { const p = n.parentElement; if (!p || own(p) || /^(SCRIPT|STYLE|NOSCRIPT)$/.test(p.tagName)) continue; const i = n.nodeValue.toLowerCase().indexOf(k); if (i >= 0 && vis(p)) hits.push([n, i]); }
+    if (!hits.length) return false;
+    tf = { k, i: tf.k === k ? (tf.i + 1) % hits.length : 0 };
+    const node = hits[tf.i][0], at = hits[tf.i][1], rg = d.createRange(); rg.setStart(node, at); rg.setEnd(node, at + k.length);
+    node.parentElement.scrollIntoView({ block: 'center' });
+    try { CSS.highlights.set('gai-find', new Highlight(rg)); } catch (e) {}
+    draw(); say('글자 ‘' + t + '’ ' + hits.length + '곳 중 ' + (tf.i + 1) + '번째: ' + txt(node.parentElement).slice(0, 70) + (hits.length > 1 ? ' | 같은 글자를 다시 치면 다음 곳' : ''));
+    return true;
+  }
   function find(t) {
     const k = t.toLowerCase().replace(/\s+/g, ''), hits = targets().filter(el => name(el).toLowerCase().replace(/\s+/g, '').includes(k));
-    if (!hits.length) return say('‘' + t + '’가 들어간 단추나 링크가 이 화면에 없습니다. q ' + t + ' 로 사이트 검색을 해 보세요.');
+    if (!hits.length) return textFind(t) || say('‘' + t + '’가 이 화면에 없습니다. q ' + t + ' 로 사이트 검색을 해 보세요.');
     if (!own(hits[0])) hits[0].scrollIntoView({ block: 'center' }); draw();
     say('‘' + t + '’ ' + hits.length + '개: ' + hits.slice(0, 8).map(el => idOf(el) + ' ' + name(el).slice(0, 18)).join(' | '));
   }
@@ -158,6 +172,7 @@ function GAI_LAYER(A) {
     if ((m = s.match(/^(\d+)$/))) return activate(+m[1]);
     if ((m = s.match(/^(\d+)\s+(.+)$/))) return fill(+m[1], m[2]);
     if (s === '?') return say(HELP);
+    if ((m = s.match(/^\/(.+)$/))) return textFind(m[1]) || say('글자 ‘' + m[1] + '’가 이 화면에 없습니다.');
     if (s === 'b') return history.back();
     if (s === 'h') return void (location.href = A.home);
     if (/^[npte]$/.test(s)) { s === 'n' ? W.scrollBy(0, page) : s === 'p' ? W.scrollBy(0, -page) : W.scrollTo(0, s === 't' ? 0 : d.documentElement.scrollHeight); draw(); return where(); }

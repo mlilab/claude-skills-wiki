@@ -1,5 +1,5 @@
-// Measurement harness. Store this text in localStorage as gai_shell (with gai_layer and gai_adapter), open a small
-// same-origin URL such as /robots.txt, then run eval(localStorage.getItem('gai_shell')). It shows the real site in a
+// Measurement harness. Store this text in localStorage as gai_shell (with gai_layer and gai_adapter), open a light
+// real page of the site (not a 404 page: its CSP may forbid frames), then run eval(localStorage.getItem('gai_shell')). It shows the real site in a
 // same-origin frame, puts the layer on every page the frame loads, keeps key presses going to the frame, and logs
 // commands, clicks and scrolls to localStorage.gai_log. Start page: localStorage.gai_start (default "/").
 document.documentElement.innerHTML = '<head><title>GAI</title></head><body style="margin:0;overflow:hidden"><iframe id="gai-frame" style="border:0;width:100vw;height:100vh;display:block"></iframe></body>';
