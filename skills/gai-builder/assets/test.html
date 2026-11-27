@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>GAI core test page</title>
+<style>body{font-family:sans-serif;margin:0}header{position:sticky;top:0;background:#eef;padding:8px;display:flex;gap:12px;align-items:center}main{padding:0 40px}.card{display:inline-block;width:30%;margin:6px;border:1px solid #999;padding:6px}.card .ph{height:300px;background:#ddd}.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}.modal div{background:#fff;padding:40px}</style></head>
+<body><header><a href="javascript:void(0)" onclick="goHome()"><img src="logo.png" width="20" height="20"></a> <input id="sbox" placeholder="Search items"> <a href="https://example.org/ext" target="_blank">External</a> <span id="tick">Notice 1</span></header>
+<div class="modal" role="dialog"><div>Promotion <button onclick="this.closest('.modal').remove()">Close</button></div></div>
+<main><p>Group <select id="grp" onchange="render()"><option>All</option><option>Alpha</option><option>Beta</option><option>Gamma</option></select></p><p id="count"></p>
+<div id="list"></div><div class="pagination"><a href="javascript:go(1)">1</a> <a href="javascript:go(2)">2</a> <a href="javascript:go(3)">3</a></div></main>
+<script>
+var G = ['Alpha', 'Beta', 'Gamma'], page = 1;
+function goHome() { location.href = 'test.html'; }
+function go(n) { page = n; render(); }
+function render() { var g = document.getElementById('grp').value, h = '', n = 0; for (var i = 1; i <= 30; i++) { var k = G[i % 3]; if (g !== 'All' && g !== k) continue; n++; h += '<div class="card"><div class="ph"></div><a href="test.html?item=' + i + '">Item ' + i + '</a> ' + k + '</div>'; } document.getElementById('list').innerHTML = h; document.getElementById('count').textContent = n + ' items, page ' + page; }
+document.getElementById('sbox').addEventListener('keydown', function (e) { if (e.keyCode === 13) location.href = 'test.html?q=' + encodeURIComponent(this.value); });
+setInterval(function () { var t = document.getElementById('tick'); t.textContent = 'Notice ' + (1 + parseInt(t.textContent.slice(7), 10) % 5); }, 1500);
+render();
+</script>
+<script src="../scripts/gai-layer.core.js"></script><script>if (location.search.indexOf('nolayer') < 0) GAI_LAYER({ css: '.card{width:98%!important;display:block!important}.card .ph{display:none!important}', resolve: [[/goHome\(\)/, 'test.html']] });</script>
+</body></html>
